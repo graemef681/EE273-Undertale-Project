@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <SFML/Graphics.hpp>
+#include<list>
 class Destination : public sf::RectangleShape
 {
 public:
@@ -12,9 +13,11 @@ public:
 protected:
 	std::string name;
 	float speed_limit;
+	std::string* neighbours;
 public:
 	// calculates distance from another instance of destination
 	double distance_from(Destination d2);
 	float getSpeed();
 	std::string getName();
+	void setNeighbours(std::string*);
 };

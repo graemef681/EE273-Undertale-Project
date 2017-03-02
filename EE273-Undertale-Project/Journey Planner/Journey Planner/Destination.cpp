@@ -48,5 +48,9 @@ std::string Destination::getName()
 	return name;
 }
 
+void Destination:: setNeighbours(std::string* neighboursArr)
+{
+	neighbours = neighboursArr;
+}
 
 

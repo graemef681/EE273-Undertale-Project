@@ -1,3 +1,3 @@
-Snowden;50,125;20
+Snowden;50,125;20;2;Hotland,Waterfall
 Hotland;200,50;60
 Waterfall;125,200;50

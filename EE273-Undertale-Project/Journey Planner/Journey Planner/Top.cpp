@@ -4,32 +4,48 @@ using namespace std;
 list<Destination> ReadFile(string filename)
 {
 start:
+	string *neighbour;
 	list<Destination> Topology;
 	ifstream inFile;
 	inFile.open(filename+".txt");
 	if (inFile.is_open())
 	{
-		while (!inFile.eof())
+		if (checkNetworkTop(filename))
 		{
-			string temp;
-			string name;
-			getline(inFile, name, ';');
-			cout << "Name is:" << name << endl;
-			float x;
-			getline(inFile, temp, ',');
-			cout << "X is:" << temp << endl;
-			x = stof(temp);
-			float y;
-			getline(inFile, temp, ';');
-			y = stof(temp);
-			float speed_avg;
-			getline(inFile, temp);
-			speed_avg = stof(temp);
-			Destination D({ 25, 25 }, { x, y }, name, speed_avg);
-			Topology.push_back(D);
+
+			while (!inFile.eof())
+			{
+				string temp;
+				string name;
+				getline(inFile, name, ';');
+				cout << "Name is:" << name << endl;
+				float x;
+				getline(inFile, temp, ',');
+				cout << "X is:" << temp << endl;
+				x = stof(temp);
+				float y;
+				getline(inFile, temp, ';');
+				y = stof(temp);
+				float speed_avg;
+				getline(inFile, temp, ';');
+				speed_avg = stof(temp);
+				int no_neighbours;
+				getline(inFile, temp, ';');
+				no_neighbours = stoi(temp);
+				neighbour = new string[no_neighbours];
+				for (int i = 0; i < no_neighbours; i++)
+				{
+					getline(inFile, temp, ',');
+					neighbour[i] = temp;
+				}
+
+				Destination D({ 25, 25 }, { x, y }, name, speed_avg);
+				Topology.push_back(D);
+				D.getNeighbours(&neighbour);
+			}
+			inFile.close();
+			return Topology;
 		}
-		inFile.close();
-		return Topology;
 	}
 	else
 	{
@@ -102,12 +118,14 @@ void deleteDest(list<Destination>* top, string nodeToDelete, string fileName)
 	It = begin;
 	while (It != end)
 	{
+		//loop through neighbours array when rewriting text file, if the name found is equal to the name of the deleted node, ignore it
+		//-1 from no neighbours 
 		outFile << It->getName() << ";" << It->getPosition().x << "," << It->getPosition().y << ";" << It->getSpeed() << endl;
 		It++;
 	}
 }
 
-void checkNetworkTop(string filename)
+bool checkNetworkTop(string filename)
 {
 	string checkName, checkX, checkY, checkSpeed;
 	ifstream inFile;
@@ -121,6 +139,7 @@ void checkNetworkTop(string filename)
 	if(checkName.empty() || checkX.empty() || checkY.empty() || checkSpeed.empty())
 	{
 		std::cout << "The topology given is invalid. Please provide another topology." << endl;
+		return false;
 	}
 	else
 	{
@@ -133,6 +152,9 @@ void checkNetworkTop(string filename)
 		catch(invalid_argument)
 		{
 		std::cout << "The topology given is invalid. Please provide another topology." << endl;
+		return false;
 		}
 	}
+	inFile.close();
+	return true;
 }
