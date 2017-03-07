@@ -1,5 +1,4 @@
 ﻿  Top.cpp
-  GUI_Driver.cpp
-  Generating Code...
+c:\users\minusfractions\documents\things for new laptop\uni notes\second year\ee273\project\ee273-undertale-project\journey planner\journey planner\top.cpp(83): warning C4715: 'ReadFile': not all control paths return a value
   Journey Planner.vcxproj -> C:\Users\minusfractions\Documents\Things for new laptop\Uni Notes\Second Year\EE273\Project\EE273-Undertale-Project\Journey Planner\Debug\Journey Planner.exe
   Journey Planner.vcxproj -> C:\Users\minusfractions\Documents\Things for new laptop\Uni Notes\Second Year\EE273\Project\EE273-Undertale-Project\Journey Planner\Debug\Journey Planner.pdb (Partial PDB)

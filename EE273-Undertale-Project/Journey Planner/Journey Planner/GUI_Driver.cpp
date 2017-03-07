@@ -10,12 +10,13 @@ int main()
 {
 	sf::RenderWindow window(sf::VideoMode(250, 250), "GUI Driver");
 	list<Destination> Top;
+	Top.clear();
 	Top = ReadFile("Node_topology");
 
-	
 	//addNewDest("Node_topology",&Top);
-	//deleteDest(&Top,"Waterfall","Node_topology");
-	Top = ReadFile("Node_topology");
+	deleteDest(&Top,"Waterfall","Node_topology");
+
+
 	//Window event and draw loop
 
 	list<Destination>::iterator begin = Top.begin(), end = Top.end(), It, It2;

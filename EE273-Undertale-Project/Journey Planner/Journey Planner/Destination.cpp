@@ -12,7 +12,7 @@ Destination::Destination()
 }
 
 
-Destination::Destination(sf::Vector2f size, sf::Vector2f position, std::string name, float speed_avg)
+Destination::Destination(sf::Vector2f size, sf::Vector2f position, std::string name, float speed_avg, int no_Neighbours)
 {
 	this->name = name;
 	this->setSize(size);
@@ -20,6 +20,7 @@ Destination::Destination(sf::Vector2f size, sf::Vector2f position, std::string n
 	this->setPosition(position);
 	this->setFillColor(sf::Color::Cyan);
 	speed_limit = speed_avg;
+	noNeighbours = no_Neighbours;
 	std::cout << this->name << std::endl;
 	std::cout << this->getPosition().x << "," << this->getPosition().y << std::endl;
 	std::cout << this->speed_limit << std::endl;
@@ -48,9 +49,32 @@ std::string Destination::getName()
 	return name;
 }
 
-void Destination:: setNeighbours(std::string* neighboursArr)
+int Destination::getNoNeighbours()
 {
-	neighbours = neighboursArr;
+	return noNeighbours;
 }
 
+std::list<Destination>* Destination::getNeighbourList()
+{
+	return &neighbourList;
+}
+
+void Destination:: setNeighbourList(std::list<Destination>* top, std::string* neighbours)
+{
+	//clear list first
+	neighbourList.clear();
+	for (int i = 0; i < noNeighbours; i++)
+	{
+		std::list<Destination>::iterator begin = (*top).begin(), end = (*top).end(), It;
+		It = begin;
+		while (It != end)
+		{
+			if ((neighbours[i]) == It->getName())
+			{
+				neighbourList.push_back(*It);
+			}
+			It++;
+		}
+	}
+}
 
