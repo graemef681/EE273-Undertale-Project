@@ -59,7 +59,6 @@ start:
 				Topology.push_back(D);
 			}
 			inFile.close();
-			delete[] ptrneighbour;
 			list<Destination>::iterator Tbegin = Topology.begin(), Tend = Topology.end(), TIt;
 			list<string*>::iterator Nbegin = Nlists.begin(), Nend = Nlists.end(), Nit;
 			TIt = Tbegin;
@@ -71,6 +70,7 @@ start:
 				cout << "Neighbours list has been set for: " << TIt->getName() << endl;
 				TIt++; Nit++;
 			}
+			delete[] ptrneighbour;
 			return Topology;
 		}
 	}
@@ -175,13 +175,13 @@ void deleteDest(list<Destination>* top, string nodeToDelete, string fileName)
 		{
 			//Is a neighbour being deleted? if so decrement
 			cout << It2->getName();
-			cout << "It1 = " << It->getName();
+			//cout << "It1 = " << It->getName();
 			if (It2->getName() == nodeToDelete)
 			{
 				//if the current item in the neighbour list is the destination is being removed
 				//decrement noNeighbours for that destination
 				It->setNoNeighbours((It->getNoNeighbours() - 1));
-				cout << "NoNeighbours Decremented = " << It->getNoNeighbours();
+				//cout << "NoNeighbours Decremented = " << It->getNoNeighbours();
 			}
 			It2++;
 		}
@@ -193,7 +193,7 @@ void deleteDest(list<Destination>* top, string nodeToDelete, string fileName)
 		int counter = 0;
 		while (It2 != Nend && It->getName() != nodeToDelete)
 		{
-			cout << "IT2 -> getname = " << It2->getName();
+			//cout << "IT2 -> getname = " << It2->getName();
 			if (It2->getName() != It->getName() && It2->getName() != nodeToDelete)
 			{
 				counter++;
