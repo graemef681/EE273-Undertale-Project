@@ -7,6 +7,7 @@ start:
 	//check notes on how to resize arrays to make sure this is correct
 	string *ptrneighbour = NULL;
 	list<Destination> Topology;
+	list<string*> Nlists;
 	ifstream inFile;
 	inFile.open(filename+".txt");
 	if (inFile.is_open())
@@ -45,30 +46,29 @@ start:
 						ptrneighbour[i] = temp;
 						cout << "Neighbour " << i + 1 << " is " << temp << endl;
 					}
-					else if (i==no_neighbours-1)
+					else if (i == no_neighbours - 1)
 					{
 						getline(inFile, temp);
 						ptrneighbour[i] = temp;
 						cout << "Last Neighbour " << i + 1 << " is " << temp << endl;
 					}
-					
-				}
-			
 
-
+				} 
+				Nlists.push_back(ptrneighbour);
 				Destination D({ 25, 25 }, { x, y }, name, speed_avg, no_neighbours);
 				Topology.push_back(D);
 			}
 			inFile.close();
-			list<Destination>::iterator begin = Topology.begin(), end = Topology.end(), It;
-			It = begin;
-			while (It != end)
+			list<Destination>::iterator Tbegin = Topology.begin(), Tend = Topology.end(), TIt;
+			list<string*>::iterator Nbegin = Nlists.begin(), Nend = Nlists.end(), Nit;
+			TIt = Tbegin;
+			Nit = Nbegin;
+			while (TIt != Tend)
 			{
 				//set neighbour list for all destinations
-				(*It).setNeighbourList(&Topology,ptrneighbour);
-				cout << "Neighbours list set for: " << It->getName() << endl;
-				It++;
-
+				(*TIt).setNeighbourList(&Topology, *Nit);
+				cout << "Neighbours list has been set for: " << TIt->getName() << endl;
+				TIt++; Nit++;
 			}
 			return Topology;
 		}
@@ -156,84 +156,72 @@ void addNewDest(string fileName,list<Destination>* currentTop)
 
 void deleteDest(list<Destination>* top, string nodeToDelete, string fileName)
 {
-	list<Destination>::iterator begin = (*top).begin(), end = (*top).end(), It;
-
-	It = begin;
-	while (It != end)
-	{
-		if (It->getName() == nodeToDelete)
-		{
-			(*top).erase(It);
-			break;
-		}
-		It++;
-	}
-
+	list<Destination>::iterator Tbegin = (*top).begin(), Tend = (*top).end(), It;
 	ofstream outFile;
 	outFile.open(fileName + ".txt");
-	It = begin;
-	while (It != end)
+	It = Tbegin;
+	while (It != Tend)
 	{
 		//loop through neighbours array when rewriting text file, if the name found is equal to the name of the deleted node, ignore it
 		//-1 from no neighbours 
-		outFile << It->getName() << ";" << It->getPosition().x << "," << It->getPosition().y << ";" << It->getSpeed() << ";";
+		if (It->getName() != nodeToDelete)
+			outFile << It->getName() << ";" << It->getPosition().x << "," << It->getPosition().y << ";" << It->getSpeed() << ";";
 
 		list<Destination> neighbour = *((*It).getNeighbourList());
-		list<Destination>::iterator begin = neighbour.begin(), end = neighbour.end(), It2;
-		It2 = begin;
-		bool removedNeighbour = false;
-		while (It2 != end)
+		list<Destination>::iterator Nbegin = neighbour.begin(), Nend = neighbour.end(), It2;
+		It2 = Nbegin;
+		while (It2 != Nend)
 		{
+			//Is a neighbour being deleted? if so decrement
+			cout << It2->getName();
+			cout << "It1 = " << It->getName();
 			if (It2->getName() == nodeToDelete)
 			{
-				//if the current item in the neighbour list is the destination that was removed
-				//delete it from the neighbour list
-				neighbour.erase(It2);
-				removedNeighbour = true;
-				break;
+				//if the current item in the neighbour list is the destination is being removed
+				//decrement noNeighbours for that destination
+				It->setNoNeighbours((It->getNoNeighbours() - 1));
+				cout << "NoNeighbours Decremented = " << It->getNoNeighbours();
 			}
 			It2++;
 		}
-
 		//output new neighbour number to file
-		int noNeighbours = 0;
-		if (removedNeighbour)
-		{//if a neighbour was removed, reduce the number of neighbours by 1
-			int newNoNeighbours = (It->getNoNeighbours()) - 1;
-			outFile << newNoNeighbours << ";";
-			noNeighbours = newNoNeighbours;
-		}
-		else
-		{
-			noNeighbours = It->getNoNeighbours();
-			outFile << noNeighbours << ";";
-		}
-
+		if (It->getName() != nodeToDelete)
+			outFile << It->getNoNeighbours() << ";";
 		//output the names of the destinations to the file
-		It2 = begin;
-		int curSize = 1;
-		int counter = 1;
-		while (It2 != end)
+		It2 = Nbegin;
+		int counter = 0;
+		while (It2 != Nend && It->getName() != nodeToDelete)
 		{
-			if (counter = noNeighbours&& It2->getName() != It->getName())
+			cout << "IT2 -> getname = " << It2->getName();
+			if (It2->getName() != It->getName() && It2->getName() != nodeToDelete)
 			{
-				cout << "HOTLAND OUTPUT:" << It2->getName() << endl;
-				outFile << It2->getName() <<endl;
-			}
-			else 
-			{
-				if (It2->getName() != It->getName())
+				counter++;
+				if (counter < It->getNoNeighbours())
 				{
 					outFile << It2->getName() << ",";
-					counter = counter + 1;
+				}
+				else if (counter == It->getNoNeighbours())
+				{
+					outFile << It2->getName();
 				}
 			}
-			/*
-			else if (curSize == (neighbour.size()) && It2->getName() != It->getName())
-			{
-				outFile << It2->getName();
-			}*/
+			
 			It2++;
+		}
+		It++;
+		if (It != Tend && It->getName() != nodeToDelete)
+			outFile << endl;
+		
+	}
+	//Search through destinations and delete from topology.
+	It = Tbegin;
+	while (It != Tend)
+	{
+		if (It->getName() == nodeToDelete)
+		{
+			cout << "TO ERASE WATERFALL" << endl;
+			(*top).erase(It);
+			break;
 		}
 		It++;
 	}
