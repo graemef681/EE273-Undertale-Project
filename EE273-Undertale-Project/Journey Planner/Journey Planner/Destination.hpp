@@ -17,10 +17,11 @@ protected:
 	int noNeighbours;
 public:
 	// calculates distance from another instance of destination
-	double distance_from(Destination d2);
+	double distance_from(Destination);
 	float getSpeed();
 	std::string getName();
 	int getNoNeighbours();
+	void setNoNeighbours(int);
 	std::list<Destination>* getNeighbourList();
 	void setNeighbourList( std::list<Destination>*,std::string*);
 };

@@ -1,6 +1,7 @@
 #include "Destination.hpp"
 #include <string>
 #include <iostream>
+#include <list>
 
 Destination::Destination()
 {
@@ -52,6 +53,11 @@ std::string Destination::getName()
 int Destination::getNoNeighbours()
 {
 	return noNeighbours;
+}
+
+void Destination::setNoNeighbours(int n)
+{
+	noNeighbours = n;
 }
 
 std::list<Destination>* Destination::getNeighbourList()
