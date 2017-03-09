@@ -1,0 +1,3 @@
+Snowden;50,125;20;2;Lab,Hotland
+Lab;200,100;60;2;Snowden,Hotland
+Hotland;200,200;40;2;Snowden,Lab

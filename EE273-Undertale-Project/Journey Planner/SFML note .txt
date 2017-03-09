@@ -1,0 +1,6 @@
+SFML 2.4.2 used is compiled for VS C++ 14 (2015)
+
+SFML will have to be configured in the project properties for each
+PC the project is worked on as no dynamic pointers exist to point to include and lib directories
+
+Once the program is compiled, and the .dll files included, it can be run on any PC supporting Win32 8.1 and upwards without pre-setup
