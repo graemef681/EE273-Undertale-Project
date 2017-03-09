@@ -59,6 +59,7 @@ start:
 				Topology.push_back(D);
 			}
 			inFile.close();
+			delete[] ptrneighbour;
 			list<Destination>::iterator Tbegin = Topology.begin(), Tend = Topology.end(), TIt;
 			list<string*>::iterator Nbegin = Nlists.begin(), Nend = Nlists.end(), Nit;
 			TIt = Tbegin;
