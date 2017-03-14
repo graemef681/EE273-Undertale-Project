@@ -8,7 +8,7 @@ Destination::Destination()
 	this->setSize({ 25,25 });
 	this->setOrigin({ this->getSize().x / 2, this->getSize().y / 2 });
 	this->setPosition({ 50,50 });
-	this->setFillColor(sf::Color::White);
+	this->setFillColor(sf::Color::Green);
 	speed_limit = 0;
 }
 
@@ -19,7 +19,6 @@ Destination::Destination(sf::Vector2f size, sf::Vector2f position, std::string n
 	this->setSize(size);
 	this->setOrigin({ this->getSize().x / 2, this->getSize().y / 2 });
 	this->setPosition(position);
-	this->setFillColor(sf::Color::Cyan);
 	speed_limit = speed_avg;
 	noNeighbours = no_Neighbours;
 	std::cout << this->name << std::endl;

@@ -14,7 +14,6 @@ start:
 	{
 		if (checkNetworkTop(filename))
 		{
-
 			while (!inFile.eof())
 			{
 				string temp;
@@ -55,7 +54,7 @@ start:
 
 				} 
 				Nlists.push_back(ptrneighbour);
-				Destination D({ 25, 25 }, { x, y }, name, speed_avg, no_neighbours);
+				Destination D({ 50, 50 }, { x, y }, name, speed_avg, no_neighbours);
 				Topology.push_back(D);
 			}
 			inFile.close();
@@ -68,7 +67,10 @@ start:
 				//set neighbour list for all destinations
 				(*TIt).setNeighbourList(&Topology, *Nit);
 				cout << "Neighbours list has been set for: " << TIt->getName() << endl;
+
 				TIt++; Nit++;
+				
+				
 			}
 			delete[] ptrneighbour;
 			return Topology;
@@ -84,10 +86,10 @@ start:
 }
 
 
-void addNewDest(string fileName,list<Destination>* currentTop)
+void addNewDest(string fileName, list<Destination>* currentTop)
 {
 	//open the output file in append mode
-	ofstream outFile(fileName +".txt", ios::app);
+	ofstream outFile(fileName + ".txt", ios::app);
 
 	string newName, curNeighbour;
 	float newX, newY;
@@ -105,54 +107,37 @@ void addNewDest(string fileName,list<Destination>* currentTop)
 	{
 		cout << "Please enter the x position for " << newName << ":" << endl;
 		cin >> newX;
-	} while (newX > 0);
-	
+	} while (newX < 0 || newX > 427);
+
 	do
 	{
 		cout << "Please enter the y position for " << newName << ":" << endl;
 		cin >> newY;
-	} while (newY > 0);
+	} while (newY < 0 || newY > 488);
 
 	do
 	{
 		cout << "Please enter the average speed for " << newName << ":" << endl;
 		cin >> newSpeed;
-	} while (newSpeed > 0);
+	} while (newSpeed < 0);
 
 	do
 	{
 		cout << "Please enter the number of neighbours that " << newName << " has:" << endl;
 		cin >> noNeighbours;
-	} while (noNeighbours > 0);
-
-	neighbours = new string[noNeighbours];
+	} while (noNeighbours < 0);
+	outFile << "\n" << newName << ";" << newX << "," << newY << ";" << newSpeed << ";";
+	outFile << noNeighbours << ";";
 	for (int j = 0; j < noNeighbours; j++)
 	{
-		do
-		{
-			cout << "Please enter the name of neighbour number " << j + 1 << " :" << endl;
-			cin >> curNeighbour;
-		} while (!curNeighbour.empty());//Will also need to check that neighbour is valid destiantion
-		neighbours[j] = curNeighbour;
+		cout << "Please enter the name of neighbour number " << j + 1 << " :" << endl;
+		cin >> curNeighbour;
+		//If valid destination then
+		outFile << curNeighbour;
+		if (j != noNeighbours - 1)
+			outFile << ","; //Will also need to check that neighbour is valid destiantion
 	}
-
-
-	outFile <<"\n"<< newName << ";" << newX << "," << newY << ";" << newSpeed << endl;
 	outFile.close();
-	//add this to the list
-	Destination newDest({ 25, 25 }, { newX, newY }, newName, newSpeed,noNeighbours);
-	//newDest.setNeighbours(neighbours);
-	(*currentTop).push_back(newDest);
-
-	//redo the neighbour lists
-	list<Destination>::iterator begin = (*currentTop).begin(), end = (*currentTop).end(), It, It2;
-	It = begin;
-	while (It != end)
-	{
-		//set neighbour list for all destinations
-		(*It).setNeighbourList(currentTop,neighbours);
-		It++;
-	}
 }
 
 void deleteDest(list<Destination>* top, string nodeToDelete, string fileName)

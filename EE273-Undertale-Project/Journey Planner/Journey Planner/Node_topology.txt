@@ -1,3 +1,4 @@
 Snowden;50,125;20;2;Hotland,Waterfall
 Hotland;200,150;60;2;Snowden,Waterfall
-Waterfall;125,50;40;2;Snowden,Hotland
+Waterfall;300,300;40;2;Hotland,Snowden
+Tem;327,450;20;2;Hotland,Snowden
