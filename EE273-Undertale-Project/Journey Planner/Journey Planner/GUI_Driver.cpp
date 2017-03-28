@@ -16,7 +16,7 @@ int main()
 	sf::Texture BackgroundTexture;
 	// Let's create the background image here, where everything initializes.
 	if (!BackgroundTexture.loadFromFile("background.png"))
-		throw "Failure!";
+		cout << "Texture couldnt be read" << endl;
 	else
 		Background.setTexture(&BackgroundTexture);
 
@@ -26,7 +26,7 @@ int main()
 	TopBackground.setSize(sf::Vector2f(TopologyBox.getSize()));
 	sf::Texture TopTexture;
 	if (!TopTexture.loadFromFile("topbackground.png"))
-		throw "Failure!";
+		cout << "Texture couldnt be read" << endl;
 	else
 		TopBackground.setTexture(&TopTexture);
 
@@ -36,15 +36,15 @@ int main()
 	TopologyBox.setOutlineColor(sf::Color::Black);
 	TopologyBox.setOutlineThickness(3);
 	list<Destination> Buttons;
-	Destination AddButton({ 75,50 }, { 490,40 }, "AddButton", 0, 0);
+	Destination AddButton({ 75,50 }, { 480,60 }, "AddButton", 0, 0);
 	AddButton.setFillColor(sf::Color::Green);
-	Destination DelButton({ 75,50 }, { 590,40 }, "DelButton", 0, 0);
+	Destination DelButton({ 75,50 }, { 580,60 }, "DelButton", 0, 0);
 	DelButton.setFillColor(sf::Color::Red);
-	Destination WalkButton({ 75,75 }, { 540,210 }, "WalkButton", 0, 0);
+	Destination WalkButton({ 75,75 }, { 530,210 }, "WalkButton", 0, 0);
 	WalkButton.setFillColor(sf::Color::Yellow);
-	Destination BusButton({ 75,75 }, { 540,285 }, "BusButton", 0, 0);
+	Destination BusButton({ 75,75 }, { 530,285 }, "BusButton", 0, 0);
 	BusButton.setFillColor(sf::Color::Blue);
-	Destination TrainButton({ 75,75 }, { 540,360 }, "TrainButton", 0, 0);
+	Destination TrainButton({ 75,75 }, { 530,360 }, "TrainButton", 0, 0);
 	TrainButton.setFillColor(sf::Color::Magenta);
 	Buttons.push_back(WalkButton);
 	Buttons.push_back(BusButton);
@@ -61,16 +61,18 @@ int main()
 
 	sf::Texture nodeTexture;
 	if (!nodeTexture.loadFromFile("node.png"))
-		throw "Failure!";
+		cout << "Texture couldnt be read" << endl;
 	//Window event and draw loop
 
 
 	bool selected = false;
+	bool adding = false;
+	bool deleting = false;
 	while (window.isOpen())
 	{
-		list<Destination>::iterator begin = Top.begin(), end = Top.end(), It;
-		It = begin;
-		while (It != end)
+		list<Destination>::iterator It;
+		It = Top.begin();
+		while (It != Top.end())
 		{
 			It->setTexture(&nodeTexture);
 			It++;
@@ -122,17 +124,17 @@ int main()
 				}
 				if (ButtInBox)
 				{						
-					if (temp.getName() == "AddButton")
+					if (temp.getName() == "AddButton" && deleting != true)
 					{
+						cout << "\n\n\nAdd button pressed" << endl;
 						addNewDest("Node_Topology", &Top);
+						Top.clear();
 						Top = ReadFile("Node_Topology");
+						cout << "File read." << endl;
 					}
-					else if (temp.getName() == "DelButton")
+					else if (temp.getName() == "DelButton" && adding != true)
 					{
-						string nodeToDelete;
-						cout << "Please enter the name of the destination you wish to delete: ";
-						cin >> nodeToDelete;
-						deleteDest(&Top, nodeToDelete, "Node_Topology");
+						deleting = true;
 					}
 					else if (temp.getName() == "WalkButton")
 					{
@@ -147,25 +149,42 @@ int main()
 						mode = 2; cout << "Mode is: " << mode << endl;
 					}
 				}
+				if (deleting)
+				{
+					cout << "Temp Name: " << temp.getName() << endl;
+					cout << "Click the destination you want to delete!\n";
+					list<Destination>::iterator TBegin = Top.begin(), Tend = Top.end();
+					It = Tend;
+					while (It != TBegin)
+					{
+						It--;
+						cout << "It->getName(): " << It->getName() << endl;
+						if (It->getName() == temp.getName())
+						{
+							deleteDest(&Top, temp.getName(), "Node_topology");
+							deleting = false;
+							break;
+						}
+						
+					}
+				}
 			}//end of click event
 		}
 
 		window.clear();
-		using namespace std;
-
 		window.draw(Background);
 		window.draw(TopBackground);
 		
-		It = begin;
-		while (It != end)
+		It = Top.begin();
+		while (It != Top.end())
 		{
 
 			window.draw(*It);
 			It++;
 		}
-		list<Destination>::iterator Bbegin = Buttons.begin(), Bend = Buttons.end(), Bit;
-		Bit = Bbegin;
-		while (Bit != Bend)
+		list<Destination>::iterator Bit;
+		Bit = Buttons.begin();
+		while (Bit != Buttons.end())
 		{
 			window.draw(*Bit);
 			Bit++;
@@ -180,6 +199,6 @@ int main()
 		window.display();
 	}//end of window loop
 	
-
+	Top.clear();
 	return 0;
 }

@@ -73,6 +73,7 @@ start:
 				
 			}
 			delete[] ptrneighbour;
+			inFile.close();
 			return Topology;
 		}
 	}
