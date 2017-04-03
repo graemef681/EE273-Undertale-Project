@@ -5,3 +5,4 @@
 #include<List>
 
 bool inBox(std::list<Destination>*, sf::Vector2i, Destination*);
+void OpenAddWindow();

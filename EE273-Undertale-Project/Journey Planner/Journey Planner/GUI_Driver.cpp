@@ -6,11 +6,13 @@
 #include "Top.hpp"
 #include "GUI_functions.hpp"
 #include "Dog.hpp"
+#include "Walker.hpp"
 using namespace std;
 
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(640, 490), "GUI Driver");
+	window.setFramerateLimit(60);
 	sf::RectangleShape Background;
 	Background.setSize(sf::Vector2f(window.getSize()));
 	sf::Texture BackgroundTexture;
@@ -119,6 +121,8 @@ int main()
 							cout << "END DESTINATION SET:" << endDest.getName() << endl;
 							cout << "Selected is" << selected << endl;
 						}
+						Walker test;
+						test.pathfinding_algorithm(&startDest, &endDest);
 					}
 					//this is where start and end would be put in the pathfinder
 				}
@@ -127,6 +131,8 @@ int main()
 					if (temp.getName() == "AddButton" && deleting != true)
 					{
 						cout << "\n\n\nAdd button pressed" << endl;
+						adding = true;
+						OpenAddWindow();
 						addNewDest("Node_Topology", &Top);
 						Top.clear();
 						Top = ReadFile("Node_Topology");
