@@ -18,14 +18,12 @@ float Travel::pathfinding_algorithm(Destination start_dest, Destination end_dest
 {
 		using namespace std;
 		//create required sets
-		list<Destination> journey, *neighbours;
+		list<Destination> journey, *neighbours=NULL;
 		list<float> distance;
 		//empty list before use
 		journey.clear();
 		//set start destination to be the first in the journey list
 		journey.push_back(start_dest);
-		//list<Destination>::iterator DestBegin = top.begin(), DestEnd = top.end(), DestIt;
-		//DestIt = DestBegin;
 		double prevDistance = 10000000000000, curDistance, shortestDistance = 10000000000000, total = 0;
 		Destination shortest, temp;
 		shortest.setName("Temp Shortest");
@@ -41,23 +39,54 @@ float Travel::pathfinding_algorithm(Destination start_dest, Destination end_dest
 			bool visitedBefore = false;
 			std::cout << "START OF WHILE" << endl;
 			std::cout << "Current node is: " << curNode.getName();
-			neighbours = curNode.getNeighbourList();
-			std::cout << neighbours->size() << endl;
+			list<Destination>::iterator DestBegin = Top->begin(), DestEnd = Top->end(), DestIt;
+			DestIt = DestBegin;
+			while (DestIt != DestEnd)
+			{
+				if (DestIt->getName() == curNode.getName())
+				{
+					neighbours = DestIt->getNeighbourList();
+					std::cout << neighbours->size() << endl;
+				}
+				DestIt++;
+			}
 			list<Destination>::iterator begin = neighbours->begin(), end = neighbours->end(), NIt;
 			NIt = begin;
 			while (NIt != end)
 			{
-				//If not visited before then check distance from. 
-				curDistance = curNode.distance_from(*NIt);
-				std::cout << "Distance from " << curNode.getName() << " to " << NIt->getName() << ":" << curDistance << endl;
-				if (curDistance < prevDistance)
-				{ //if the currentDistance is shorter than the previous
-					shortest = *NIt;
-					std::cout << "Number of neighbours for shortest is: " << shortest.getNoNeighbours();
-					shortestDistance = curDistance;
-				}
+					//If not visited before then check distance from. 
+					curDistance = curNode.distance_from(*NIt);
+					
+					//**************************************************
+					//Check if the current node has been visited before
+					//If it has, then add a big number to its distance so it isn't picked
+
+					/*list<Destination>::iterator Jbegin = journey.begin(), Jend = journey.end(), Jit;
+					Jit = Jbegin;
+					while (Jit != Jend)
+					{
+						if ((*Jit).getName() == curNode.getName() && (*Jit).getName() != start_dest.getName())
+						{
+							curDistance = curDistance + 1000000;
+						}
+						temp = *Jit;
+						Jit++;
+					}*/
+					//**********************************************
+
+					std::cout << "Distance from " << curNode.getName() << " to " << NIt->getName() << ":" << curDistance << endl;
+					if (curDistance < prevDistance)
+					{ //if the currentDistance is shorter than the previous
+						
+
+								shortest = *NIt;
+								std::cout << "Number of neighbours for shortest is: " << shortest.getNoNeighbours();
+								shortestDistance = curDistance;
+					
+					}
 				prevDistance = curDistance;
 				NIt++;
+				
 			}
 			list<Destination>::iterator Jbegin = journey.begin(), Jend = journey.end(), Jit;
 			Jit = Jbegin;
