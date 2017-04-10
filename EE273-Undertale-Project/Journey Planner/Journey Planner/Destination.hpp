@@ -15,6 +15,7 @@ protected:
 	float speed_limit;
 	std::list<Destination> neighbourList;
 	int noNeighbours;
+	double distance;
 public:
 	// calculates distance from another instance of destination
 	double distance_from(Destination);
@@ -24,4 +25,6 @@ public:
 	void setNoNeighbours(int);
 	std::list<Destination>* getNeighbourList();
 	void setNeighbourList( std::list<Destination>*,std::string*);
+	double getDistance() { return distance; };
+	void setDistance(double d) {	distance = d;	};
 };

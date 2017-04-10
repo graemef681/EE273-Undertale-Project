@@ -9,6 +9,7 @@ Destination::Destination()
 	this->setOrigin({ this->getSize().x / 2, this->getSize().y / 2 });
 	this->setPosition({ 50,50 });
 	this->setFillColor(sf::Color::Green);
+	this->setDistance(100000000000);
 	speed_limit = 0;
 }
 

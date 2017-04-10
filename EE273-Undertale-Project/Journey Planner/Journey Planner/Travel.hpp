@@ -9,7 +9,7 @@ class Travel
 public:
 	Travel();
 	~Travel();
-	virtual float pathfinding_algorithm(Destination* start_dest, Destination* end_dest);
+	void pathfinding_algorithm(Destination* start_dest, Destination* end_dest, std::list<Destination>*);
 	void leaveAfter(float);
 	void arriveBefore(float);
 	float calcJourneyTime(float);

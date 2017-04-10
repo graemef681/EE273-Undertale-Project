@@ -11,8 +11,8 @@ using namespace std;
 
 int main()
 {
+	Destination startDest, endDest;
 	sf::RenderWindow window(sf::VideoMode(640, 490), "GUI Driver");
-	window.setFramerateLimit(60);
 	sf::RectangleShape Background;
 	Background.setSize(sf::Vector2f(window.getSize()));
 	sf::Texture BackgroundTexture;
@@ -87,7 +87,7 @@ int main()
 			//get position of mouse when it is clicked
 			bool blInBox = false;
 			bool ButtInBox = false;
-			Destination temp, startDest, endDest;; //instance to return destination clicked on
+			Destination temp; //instance to return destination clicked on
 			if (event.type == sf::Event::MouseButtonReleased)
 			{
 				if (event.mouseButton.button == sf::Mouse::Left)
@@ -107,7 +107,7 @@ int main()
 					if (selected == false)
 					{
 						//set it as the start
-						Destination startDest = temp;
+						startDest = temp;
 						cout << "START DESTINATION SET:" << startDest.getName() << endl;
 						cout << "Selected is" << selected << endl;
 						selected = true;
@@ -117,12 +117,14 @@ int main()
 						if (startDest.getName() != temp.getName())
 						{
 							//otherwise, set it as the end
-							Destination endDest = temp;
+							endDest = temp;
+							cout << "START DESTINATION SET:" << startDest.getName() << endl;
 							cout << "END DESTINATION SET:" << endDest.getName() << endl;
 							cout << "Selected is" << selected << endl;
+							Travel test;
+							test.pathfinding_algorithm(&startDest, &endDest, &Top);
 						}
-						Walker test;
-						test.pathfinding_algorithm(&startDest, &endDest);
+
 					}
 					//this is where start and end would be put in the pathfinder
 				}

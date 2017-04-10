@@ -14,80 +14,122 @@ Travel::~Travel()
 }
 
 
-float Travel::pathfinding_algorithm(Destination* start_dest, Destination* end_dest)
+void Travel::pathfinding_algorithm(Destination* start_dest, Destination* end_dest, std::list<Destination>* Topology)
 {
-		using namespace std;
-		//create required sets
-		list<Destination> journey, neighbours{ 0 };
-		list<float> distance;
-		//empty list before use
-		journey.clear();
-		//set start destination to be the first in the journey list
-		journey.push_back(*start_dest);
-		//list<Destination>::iterator DestBegin = top.begin(), DestEnd = top.end(), DestIt;
-		//DestIt = DestBegin;
-		double prevDistance = 10000000000, curDistance, shortestDistance = 10000000000000, total = 0;
-		Destination shortest, curNode = *start_dest, temp;
-		bool visitedBefore = false;
-		int count = 1;
-		while (curNode.getName() != end_dest->getName())
+	using namespace std;
+	list<Destination>* top = Topology; //Topology for unvisited set
+	list<Destination> visited;
+	list<double> distances{0};
+	list<Destination>::iterator DestBegin = top->begin(), DestEnd = top->end(), DestIt;
+	double curDistance, shortestDistance = 0, prevDistance = 1000000000000000, total = 0;
+	string shortestNodeName;
+	bool DestVisited = false;
+	DestIt = DestBegin;
+	while (DestIt != DestEnd)
+	{ //Set all nodes distance to effective infinite
+		DestIt->setDistance(1000000000000);
+		DestIt++;
+	}
+	start_dest->setDistance(0); //Current source node distance to 0
+	Destination curNode;
+	curNode = *start_dest; //Initial current node to source node.
+
+	while (curNode.getName() != end_dest->getName())
+	{
+		list<Destination>* neighbours = curNode.getNeighbourList(); //Consider all unvisited neighbours and calculate their tentative distances
+		list<Destination>::iterator Nbegin = neighbours->begin(), Nend = neighbours->end(), Nit;
+		Nit = Nbegin;
+		while (Nit != Nend)
 		{
-			neighbours = *curNode.getNeighbourList();
-			list<Destination>::iterator begin = neighbours.begin(), end = neighbours.end(), NIt;
-			NIt = begin;
-			while (NIt != end)
+			if (visited.empty())
 			{
-				curDistance = curNode.distance_from(*NIt);
-				cout << "Distance from " << curNode.getName() << " to " << NIt->getName() << ":" << curDistance << endl;
+				curDistance = curNode.distance_from(*Nit);
+				cout << "Distance from " << curNode.getName() << " to " << Nit->getName() << ":" << curDistance << endl; //Calculate distance from cur to Neighbour
+				//If calculated neighbour distance through current node is smaller than currently assigned neighbour distance
+				if ((curNode.getDistance() + curDistance) < Nit->getDistance())
+					Nit->setDistance(curDistance); //Then set calculated distance as neighbour distance
+				//Otherwise keep neighbour assigned distance value
+				//Find neighbour with shortest curdistance
 				if (curDistance < prevDistance)
-				{ //if the currentDistance is shorter than the previous
-					shortest = *NIt;
+				{
+					prevDistance = curDistance;
+					shortestNodeName = Nit->getName(); //After all neighbours curDistances have been checked, this will have the name of the shortest
 					shortestDistance = curDistance;
 				}
-				prevDistance = curDistance;
-				NIt++;
 			}
-			list<Destination>::iterator Jbegin = journey.begin(), Jend = journey.end(), Jit;
-			Jit = Jbegin;
-			while (Jit != Jend)
+			else
 			{
-				if ((*Jit).getName() == shortest.getName())
+				list<Destination>::iterator Vbegin = visited.begin(), Vend = visited.end(), Vit;
+				Vit = Vbegin;
+				while (Vit != Vend)
 				{
-					visitedBefore = true;
+					if (Vit->getName() == Nit->getName())
+					{
+						DestVisited = true;
+					}
+					else
+					{
+						DestVisited = false;
+					}
+					Vit++;
 				}
-				temp = *Jit;
-				Jit++;
+				if (!DestVisited)
+				{
+					curDistance = curNode.distance_from(*Nit);
+					cout << "Distance from " << curNode.getName() << " to " << Nit->getName() << ":" << curDistance << endl; //Calculate distance from cur to Neighbour
+					//If calculated neighbour distance through current node is smaller than currently assigned neighbour distance
+					if ((curNode.getDistance() + curDistance) < Nit->getDistance())
+					{
+						Nit->setDistance(curDistance); //Then set calculated distance as neighbour distance
+													   //Otherwise keep neighbour assigned distance value
+					}
+						
+					//Find neighbour with shortest curdistance
+					if (curDistance < prevDistance)
+					{
+						prevDistance = curDistance;
+						shortestNodeName = Nit->getName(); //After all neighbours curDistances have been checked, this will have the name of the shortest
+						shortestDistance = curDistance;
+					}
+				}
 			}
-			if (!visitedBefore)
+			Nit++;
+		}
+		//After checking all neighbours
+		visited.push_back(curNode);//Mark curNode as visited
+		distances.push_back(shortestDistance); //Add shortest Distance
+		cout << "Shortest Distance: " << shortestDistance << endl;
+		cout << "Shortest Node Name: " << shortestNodeName << endl;
+		//Use ShortestNodeName to select next current node
+		DestIt = DestBegin;
+		while (DestIt != DestEnd) //Use topology pointer to set current node.
+		{
+			if (shortestNodeName == DestIt->getName())
 			{
-				journey.push_back(shortest);
-				distance.push_back(shortestDistance);
-				curNode = shortest;
+				curNode = *DestIt;
 			}
+			DestIt++;
 		}
-		journey.push_back(*end_dest);
-		distance.push_back((*end_dest).distance_from(temp));
-		list<Destination>::iterator jBegin = journey.begin(), jEnd = journey.end(), jIt;
-		jIt = jBegin;
-		cout << "THE SHORTEST JOURNEY IS" << endl;
-		while (jIt != jEnd)
-		{
-			cout << jIt->getName() << endl;
-			jIt++;
-		}
-
-		list<float>::iterator DBegin = distance.begin(), DEnd = distance.end(), DIt;
-		DIt = DBegin;
-		while (DIt != DEnd)
-		{
-			total = total + *DIt;
-			DIt++;
-		}
-		cout << "THE DISTANCE IS :" << total << endl;
-
-		calcJourneyTime(total);
-		return total;
+	}
+	visited.push_back(curNode); //Put end destination into visited list
+	//Now find the journey path by visited list
+	list<Destination>::iterator Vbegin = visited.begin(), Vend = visited.end(), Vit;
+	list<double>::iterator Dbegin = distances.begin(), Dend = distances.end(), Dit;
+	Vit = Vbegin;
+	Dit = Dbegin;
+	while (Vit != Vend)
+	{
+		cout << "Visited: " << Vit->getName() << endl;
+		//Get distance for each visited node from topology
+		Vit->setDistance(*Dit); //Also set distance for each journey node
+		total = total + *Dit;
+		cout << "Total Distance: " << total << endl;
+		cout << "Total Journey time still to be implemented";
+		Vit++;
+		Dit++;
+	}
 }
+
 
 void Travel::leaveAfter(float journeyTime)
 {
