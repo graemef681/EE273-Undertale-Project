@@ -6,6 +6,8 @@ class Bus :
 public:
 	Bus();
 	~Bus();
-	void pathfinding_algorithm(Destination* start_dest, Destination* end_dest);
+	float calcJourneyTime(float);
+	void setConstants(float, std::string);
+	//void pathfinding_algorithm(Destination* start_dest, Destination* end_dest);
 };
 

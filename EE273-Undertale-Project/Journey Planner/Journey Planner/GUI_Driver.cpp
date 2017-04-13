@@ -7,6 +7,10 @@
 #include "GUI_functions.hpp"
 #include "Dog.hpp"
 #include "Walker.hpp"
+#include "Bus.hpp"
+#include "Train.hpp"
+#include "Destination.hpp"
+#include <string>
 using namespace std;
 
 int main()
@@ -121,10 +125,94 @@ int main()
 							cout << "START DESTINATION SET:" << startDest.getName() << endl;
 							cout << "END DESTINATION SET:" << endDest.getName() << endl;
 							cout << "Selected is" << selected << endl;
-							Travel test;
-							test.pathfinding_algorithm(&startDest, &endDest, &Top);
-						}
 
+							//********** GOING TO NEED SOME KIND OF CONDITION HERE 
+							//********** TO CHANGE WHETHER BUS, WALKER OR TRAIN IS USED
+							//**********Later on this can be switched to on a button press
+							string transportType, avoidName;
+							cout << "How would you like to travel? (Bus/Walking/Train) :" << endl;
+							cin >> transportType;
+							
+							char cLeaveAfter='n', cArriveBefore='n', cAvoid='n', cStops = 'n';
+							cout << "Do you want to select a time to leave after?" << endl;
+							cin >> cLeaveAfter;
+
+							if (cLeaveAfter == 'n')
+							{
+								//leaveAfter and arrive before can't both be called at once 
+								cout << "Do you want to select a time to arrive before?" << endl;
+								cin >> cArriveBefore;
+							}
+							
+							cout << "Do you want to avoid any destinations?" << endl;
+							cin >> cAvoid;
+
+							if (cAvoid == 'y')
+							{
+								cout << "Please enter the name of the destination to avoid:" << endl;
+								cin >> avoidName;
+							}
+
+							cout << "Do you want to minimise the number of stops?" << endl;
+							cin >> cStops;
+
+							//Call appropriate pathfinding function
+							Travel pathfinder;
+							double distance, time;
+							if (cStops == 'y'&& cAvoid =='n')
+							{
+								//distance = pathfinder.pathfinding_algorithm(&startDest, &endDest, &Top,cStops);
+							}
+							else if (cAvoid=='y'&& cStops =='n')
+							{
+								distance = pathfinder.pathfinding_algorithm(&startDest, &endDest, &Top, avoidName);
+							}
+							else if (cStops == 'y' && cAvoid == 'y')
+							{
+							//	distance = pathfinder.pathfinding_algorithm(&startDest, &endDest, &Top, cStops, avoidName);
+							}
+							else
+							{
+								// call the basic pathfinding function
+								cout << "BASIC PATHFINDING CALLED";
+								distance = pathfinder.pathfinding_algorithm(&startDest, &endDest, &Top);
+							}
+							//Calculate the journey time from the correct mode 
+							if (transportType == "Train")
+							{
+								Train test;
+								time=test.calcJourneyTime(distance);
+							}
+							else if (transportType == "Bus")
+							{
+								Bus test;
+								time = test.calcJourneyTime(distance);
+							}
+							else if (transportType == "Walker")
+							{
+								Walker test;
+								time = test.calcJourneyTime(distance);
+							}
+							else
+							{
+								std::cout << "Error: No Transport type in main" << std::endl;
+							}
+							//Check arriveBefore and leaveAfter
+							if (cLeaveAfter == 'y')
+							{
+								pathfinder.leaveAfter(time);
+							}
+							else if (cArriveBefore == 'y')
+							{
+								pathfinder.arriveBefore(time);
+							}
+							else
+							{
+								//calculate total journey time if the left now (including wait when it comes to train/bus)
+								pathfinder.leaveAfter(time);
+							}
+
+						}
 					}
 					//this is where start and end would be put in the pathfinder
 				}

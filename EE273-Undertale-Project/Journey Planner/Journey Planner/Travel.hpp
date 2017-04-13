@@ -9,21 +9,21 @@ class Travel
 public:
 	Travel();
 	~Travel();
-	void pathfinding_algorithm(Destination* start_dest, Destination* end_dest, std::list<Destination>*);
+	double pathfinding_algorithm(Destination* start_dest, Destination* end_dest, std::list<Destination>*);
+	double pathfinding_algorithm(Destination* start_dest, Destination* end_dest, std::list<Destination>*,std::string);
+	//double pathfinding_algorithm(Destination* start_dest, Destination* end_dest, std::list<Destination>*, char);
+	//double pathfinding_algorithm(Destination* start_dest, Destination* end_dest, std::list<Destination>*, char, std::string);
 	void leaveAfter(float);
 	void arriveBefore(float);
-	float calcJourneyTime(float);
+	//float calcJourneyTime(float);
 
 
 protected:
 	double total_route_time;
-	//double mean_speed=0;
 	int no_stops;
-	//float departTimes[1];
-	//std::string type = "NULL";
 	Destination* array_of_avoids;
-	std::string type = "Bus";
-	float mean_speed = 20;
-	double departTimes[20] = { 8.05, 9.12, 10.15, 10.40, 11.15, 12.01, 12.21, 12.41, 13.01, 13.19, 13.56, 14.14, 15.08, 15.47, 16.00, 16.17, 16.38, 17.00, 17.05, 18.30 };
+	std::string type;
+	float mean_speed;
+	double departTimes[20];
 };
 

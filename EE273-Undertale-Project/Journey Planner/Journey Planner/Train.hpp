@@ -6,6 +6,9 @@ class Train :
 public:
 	Train();
 	~Train();
-	void pathfinding_algorithm();
+	float calcJourneyTime(float);
+	//void pathfinding_algorithm();
+	void setConstants(float, std::string);
 };
+
 
