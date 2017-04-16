@@ -11,6 +11,5 @@ public:
 	void leaveAfter(float);
 	void arriveBefore(float);
 	void leaveNow(float);
-	//void pathfinding_algorithm(Destination* start_dest, Destination* end_dest);
 };
 

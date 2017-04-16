@@ -20,13 +20,13 @@ int main()
 	sf::RectangleShape Background;
 	Background.setSize(sf::Vector2f(window.getSize()));
 	sf::Texture BackgroundTexture;
-	// Let's create the background image here, where everything initializes.
+	// set background to buttons section here
 	if (!BackgroundTexture.loadFromFile("background.png"))
 		cout << "Texture couldnt be read" << endl;
 	else
 		Background.setTexture(&BackgroundTexture);
 
-
+	//set grid background to topology
 	sf::RectangleShape TopologyBox({ 427,490 });
 	sf::RectangleShape TopBackground;
 	TopBackground.setSize(sf::Vector2f(TopologyBox.getSize()));
@@ -36,7 +36,7 @@ int main()
 	else
 		TopBackground.setTexture(&TopTexture);
 
-
+	//create buttons
 	TopologyBox.setPosition({ 0,0 });
 	TopologyBox.setFillColor(sf::Color::Transparent);
 	TopologyBox.setOutlineColor(sf::Color::Black);
@@ -58,24 +58,28 @@ int main()
 	Buttons.push_back(AddButton);
 	Buttons.push_back(DelButton);
 
+	//create dog animation in corner
 	Dog dog;
 	int i = 0, mode = 0;
 
+	//read in the topology
 	list<Destination> Top;
 	Top.clear();
 	Top = ReadFile("Node_topology");
 
+	//set the texture for the nodes
 	sf::Texture nodeTexture;
 	if (!nodeTexture.loadFromFile("node.png"))
 		cout << "Texture couldnt be read" << endl;
-	//Window event and draw loop
 
-
+	//initialise booleans for buttons
 	bool selected = false;
 	bool adding = false;
 	bool deleting = false;
+	//Window event and draw loop
 	while (window.isOpen())
 	{
+		//draw all of the destinations to the screen
 		list<Destination>::iterator It;
 		It = Top.begin();
 		while (It != Top.end())
@@ -83,9 +87,11 @@ int main()
 			It->setTexture(&nodeTexture);
 			It++;
 		}
+		//check for events
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
+			//if close button is pressed, window is closed
 			if (event.type == sf::Event::Closed)
 				window.close();
 			//get position of mouse when it is clicked
@@ -99,7 +105,7 @@ int main()
 					cout << "CLICK" << endl;
 					sf::Vector2i position = sf::Mouse::getPosition(window);
 					//call checkInBox function
-					//remember to pass in position 
+					//checks if the user has clicked a button or node
 					blInBox = inBox(&Top, position, &temp);
 					ButtInBox = inBox(&Buttons, position, &temp);
 					cout << "blinbox is:" << blInBox << endl;
@@ -126,7 +132,7 @@ int main()
 							cout << "END DESTINATION SET:" << endDest.getName() << endl;
 							cout << "Selected is" << selected << endl;
 
-							//********** GOING TO NEED SOME KIND OF CONDITION HERE 
+							//********** CONDITION HERE 
 							//********** TO CHANGE WHETHER BUS, WALKER OR TRAIN IS USED
 							//**********Later on this can be switched to on a button press
 							string transportType, avoidName;
@@ -156,7 +162,7 @@ int main()
 									{
 										cout << "You cannot avoid the start/end destination. Please enter another destination." << endl;
 										cin >> avoidName;
-								}
+									}
 							}
 
 							cout << "Do you want to minimise the number of stops?" << endl;
@@ -277,36 +283,39 @@ int main()
 				if (ButtInBox)
 				{						
 					if (temp.getName() == "AddButton" && deleting != true)
-					{
+					{//if the user has pressed the add node button
 						cout << "\n\n\nAdd button pressed" << endl;
 						adding = true;
 						OpenAddWindow();
+						//call function to add node
 						addNewDest("Node_Topology", &Top);
+						//refresh topology so new node is incuded 
 						Top.clear();
 						Top = ReadFile("Node_Topology");
 						cout << "File read." << endl;
 					}
 					else if (temp.getName() == "DelButton" && adding != true)
-					{
+					{//delete button has been pressed
 						deleting = true;
 					}
 					else if (temp.getName() == "WalkButton")
-					{
+					{//walk button has been pressed
 						mode = 0; cout << "Mode is: " << mode << endl;
 					}
 					else if (temp.getName() == "BusButton")
-					{
+					{//bus button has been pressed
 						mode = 1; cout << "Mode is: " << mode << endl;
 					}
 					else if (temp.getName() == "TrainButton")
-					{
+					{//train button has been pressed 
 						mode = 2; cout << "Mode is: " << mode << endl;
 					}
 				}
 				if (deleting)
-				{
+				{//if the user clicked deleted
 					cout << "Temp Name: " << temp.getName() << endl;
 					cout << "Click the destination you want to delete!\n";
+					//delete the node the user clicks on
 					list<Destination>::iterator TBegin = Top.begin(), Tend = Top.end();
 					It = Tend;
 					while (It != TBegin)
@@ -314,7 +323,7 @@ int main()
 						It--;
 						cout << "It->getName(): " << It->getName() << endl;
 						if (It->getName() == temp.getName())
-						{
+						{//find the node the user wants to delete and remove it
 							deleteDest(&Top, temp.getName(), "Node_topology");
 							deleting = false;
 							break;
@@ -323,8 +332,9 @@ int main()
 					}
 				}
 			}//end of click event
-		}
+		}//end of check event loop
 
+		//clear window and draw backgrounds
 		window.clear();
 		window.draw(Background);
 		window.draw(TopBackground);
@@ -332,14 +342,14 @@ int main()
 		It = Top.begin();
 		while (It != Top.end())
 		{
-
+			//draw nodes
 			window.draw(*It);
 			It++;
 		}
 		list<Destination>::iterator Bit;
 		Bit = Buttons.begin();
 		while (Bit != Buttons.end())
-		{
+		{//draw buttons
 			window.draw(*Bit);
 			Bit++;
 		}

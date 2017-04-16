@@ -67,10 +67,7 @@ start:
 				//set neighbour list for all destinations
 				(*TIt).setNeighbourList(&Topology, *Nit);
 				cout << "Neighbours list has been set for: " << TIt->getName() << endl;
-
 				TIt++; Nit++;
-				
-				
 			}
 			delete[] ptrneighbour;
 			inFile.close();
@@ -206,7 +203,7 @@ void deleteDest(list<Destination>* top, string nodeToDelete, string fileName)
 	{
 		if (It->getName() == nodeToDelete)
 		{
-			cout << "TO ERASE WATERFALL" << endl;
+			cout << "TO ERASE" << endl;
 			(*top).erase(It);
 			break;
 		}
