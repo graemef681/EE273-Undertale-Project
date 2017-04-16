@@ -13,8 +13,9 @@ public:
 	double pathfinding_algorithm(Destination* start_dest, Destination* end_dest, std::list<Destination>*,std::string);
 	//double pathfinding_algorithm(Destination* start_dest, Destination* end_dest, std::list<Destination>*, char);
 	//double pathfinding_algorithm(Destination* start_dest, Destination* end_dest, std::list<Destination>*, char, std::string);
-	void leaveAfter(float);
+	/*void leaveAfter(float);
 	void arriveBefore(float);
+	void leaveNow(float);*/
 	//float calcJourneyTime(float);
 
 

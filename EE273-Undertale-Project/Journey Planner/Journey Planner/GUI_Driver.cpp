@@ -130,7 +130,7 @@ int main()
 							//********** TO CHANGE WHETHER BUS, WALKER OR TRAIN IS USED
 							//**********Later on this can be switched to on a button press
 							string transportType, avoidName;
-							cout << "How would you like to travel? (Bus/Walking/Train) :" << endl;
+							cout << "How would you like to travel? (Bus/Walker/Train) :" << endl;
 							cin >> transportType;
 							
 							char cLeaveAfter='n', cArriveBefore='n', cAvoid='n', cStops = 'n';
@@ -149,8 +149,14 @@ int main()
 
 							if (cAvoid == 'y')
 							{
-								cout << "Please enter the name of the destination to avoid:" << endl;
-								cin >> avoidName;
+									
+									cout << "Please enter the name of the destination to avoid:" << endl;
+									cin >> avoidName;
+									if (avoidName == startDest.getName() || avoidName == endDest.getName())
+									{
+										cout << "You cannot avoid the start/end destination. Please enter another destination." << endl;
+										cin >> avoidName;
+								}
 							}
 
 							cout << "Do you want to minimise the number of stops?" << endl;
@@ -200,21 +206,73 @@ int main()
 							//Check arriveBefore and leaveAfter
 							if (cLeaveAfter == 'y')
 							{
-								pathfinder.leaveAfter(time);
+								if (transportType == "Train")
+								{
+									Train test;
+									test.leaveAfter(time);
+								}
+								else if (transportType == "Bus")
+								{
+									Bus test;
+									test.leaveAfter(time);
+								}
+								else if (transportType == "Walker")
+								{
+									cout << "Your total journey time is : " << time << ", and you can leave any time you want." << endl;
+								}
+								else
+								{
+									std::cout << "Error: No Transport type in main" << std::endl;
+								}
 							}
 							else if (cArriveBefore == 'y')
 							{
-								pathfinder.arriveBefore(time);
+								if (transportType == "Train")
+								{
+									Train test;
+									test.arriveBefore(time);
+								}
+								else if (transportType == "Bus")
+								{
+									Bus test;
+									test.arriveBefore(time);
+								}
+								else if (transportType == "Walker")
+								{
+									Walker test;
+									test.arriveBefore(time);
+								}
+								else
+								{
+									std::cout << "Error: No Transport type in main" << std::endl;
+								}
+								
 							}
 							else
 							{
 								//calculate total journey time if the left now (including wait when it comes to train/bus)
-								pathfinder.leaveAfter(time);
+								if (transportType == "Train")
+								{
+									Train test;
+									test.leaveNow(time);
+								}
+								else if (transportType == "Bus")
+								{
+									Bus test;
+									test.leaveNow(time);
+								}
+								else if (transportType == "Walker")
+								{
+									cout << "Your total journey time is : " << time << ", and you can leave any time you want." << endl;
+								}
+								else
+								{
+									std::cout << "Error: No Transport type in main" << std::endl;
+								}
 							}
 
 						}
 					}
-					//this is where start and end would be put in the pathfinder
 				}
 				if (ButtInBox)
 				{						
