@@ -17,6 +17,7 @@ int main()
 {
 	Destination startDest, endDest;
 	sf::RenderWindow window(sf::VideoMode(640, 490), "GUI Driver");
+	window.setFramerateLimit(60);
 	sf::RectangleShape Background;
 	Background.setSize(sf::Vector2f(window.getSize()));
 	sf::Texture BackgroundTexture;
@@ -60,7 +61,6 @@ int main()
 
 	//create dog animation in corner
 	Dog dog;
-	int i = 0, mode = 0;
 
 	//read in the topology
 	list<Destination> Top;
@@ -76,6 +76,10 @@ int main()
 	bool selected = false;
 	bool adding = false;
 	bool deleting = false;
+
+	int i = 0, mode = 0;
+	//Initialise walking mode and int animation iterator
+	cout << "Initialised mode to: Walking" << endl;
 	//Window event and draw loop
 	while (window.isOpen())
 	{
@@ -102,14 +106,11 @@ int main()
 			{
 				if (event.mouseButton.button == sf::Mouse::Left)
 				{
-					cout << "CLICK" << endl;
 					sf::Vector2i position = sf::Mouse::getPosition(window);
 					//call checkInBox function
 					//checks if the user has clicked a button or node
 					blInBox = inBox(&Top, position, &temp);
 					ButtInBox = inBox(&Buttons, position, &temp);
-					cout << "blinbox is:" << blInBox << endl;
-					cout << "ButtInBox is: " << ButtInBox << endl;
 				}
 				if (blInBox)
 				{
@@ -119,7 +120,6 @@ int main()
 						//set it as the start
 						startDest = temp;
 						cout << "START DESTINATION SET:" << startDest.getName() << endl;
-						cout << "Selected is" << selected << endl;
 						selected = true;
 					}
 					else
@@ -130,58 +130,58 @@ int main()
 							endDest = temp;
 							cout << "START DESTINATION SET:" << startDest.getName() << endl;
 							cout << "END DESTINATION SET:" << endDest.getName() << endl;
-							cout << "Selected is" << selected << endl;
 
-							//********** CONDITION HERE 
-							//********** TO CHANGE WHETHER BUS, WALKER OR TRAIN IS USED
-							//**********Later on this can be switched to on a button press
 							string transportType, avoidName;
-							cout << "How would you like to travel? (Bus/Walker/Train) :" << endl;
-							cin >> transportType;
-							
-							char cLeaveAfter='n', cArriveBefore='n', cAvoid='n', cStops = 'n';
-							cout << "Do you want to select a time to leave after?" << endl;
+							switch (mode)
+							{
+							case 0: transportType = "Walker";
+							case 1: transportType = "Bus";
+							case 2: transportType = "Train";
+							}
+
+							char cLeaveAfter = 'n', cArriveBefore = 'n', cAvoid = 'n', cStops = 'n';
+							cout << "Do you want to select a time to leave after? (y/n): ";
 							cin >> cLeaveAfter;
 
 							if (cLeaveAfter == 'n')
 							{
 								//leaveAfter and arrive before can't both be called at once 
-								cout << "Do you want to select a time to arrive before?" << endl;
+								cout << "Do you want to select a time to arrive before? (y/n): ";
 								cin >> cArriveBefore;
 							}
-							
-							cout << "Do you want to avoid any destinations?" << endl;
+
+							cout << "Do you want to avoid any destinations? (y/n): ";
 							cin >> cAvoid;
 
 							if (cAvoid == 'y')
 							{
-									
-									cout << "Please enter the name of the destination to avoid:" << endl;
+
+								cout << "Please enter the name of the destination to avoid: ";
+								cin >> avoidName;
+								if (avoidName == startDest.getName() || avoidName == endDest.getName())
+								{
+									cout << "You cannot avoid the start/end destination. Please enter another destination." << endl;
 									cin >> avoidName;
-									if (avoidName == startDest.getName() || avoidName == endDest.getName())
-									{
-										cout << "You cannot avoid the start/end destination. Please enter another destination." << endl;
-										cin >> avoidName;
-									}
+								}
 							}
 
-							cout << "Do you want to minimise the number of stops?" << endl;
-							cin >> cStops;
+							//cout << "Do you want to minimise the number of stops? (y/n): ";
+							//cin >> cStops;
 
 							//Call appropriate pathfinding function
 							Travel pathfinder;
 							double distance, time;
-							if (cStops == 'y'&& cAvoid =='n')
+							if (cStops == 'y'&& cAvoid == 'n')
 							{
 								//distance = pathfinder.pathfinding_algorithm(&startDest, &endDest, &Top,cStops);
 							}
-							else if (cAvoid=='y'&& cStops =='n')
+							else if (cAvoid == 'y'&& cStops == 'n')
 							{
 								distance = pathfinder.pathfinding_algorithm(&startDest, &endDest, &Top, avoidName);
 							}
 							else if (cStops == 'y' && cAvoid == 'y')
 							{
-							//	distance = pathfinder.pathfinding_algorithm(&startDest, &endDest, &Top, cStops, avoidName);
+								//	distance = pathfinder.pathfinding_algorithm(&startDest, &endDest, &Top, cStops, avoidName);
 							}
 							else
 							{
@@ -190,46 +190,49 @@ int main()
 								distance = pathfinder.pathfinding_algorithm(&startDest, &endDest, &Top);
 							}
 							//Calculate the journey time from the correct mode 
-							if (transportType == "Train")
+							switch (mode)
 							{
-								Train test;
-								time=test.calcJourneyTime(distance);
-							}
-							else if (transportType == "Bus")
-							{
-								Bus test;
-								time = test.calcJourneyTime(distance);
-							}
-							else if (transportType == "Walker")
+							case 0:
 							{
 								Walker test;
 								time = test.calcJourneyTime(distance);
 							}
-							else
+							case 1:
 							{
-								std::cout << "Error: No Transport type in main" << std::endl;
+								Bus test;
+								time = test.calcJourneyTime(distance);
+							}
+							case 2:
+							{
+								Train test;
+								time = test.calcJourneyTime(distance);
+							}
 							}
 							//Check arriveBefore and leaveAfter
 							if (cLeaveAfter == 'y')
 							{
-								if (transportType == "Train")
+								switch (mode)
 								{
-									Train test;
-									test.leaveAfter(time);
+								case 0:
+								{
+									cout << "Your total journey time is: " << time << ", and you can leave any time you want." << endl;
 								}
-								else if (transportType == "Bus")
+								case 1:
 								{
 									Bus test;
 									test.leaveAfter(time);
 								}
-								else if (transportType == "Walker")
+								case 2:
 								{
-									cout << "Your total journey time is : " << time << ", and you can leave any time you want." << endl;
+									Train test;
+									test.leaveAfter(time);
 								}
-								else
+								default: 
 								{
-									std::cout << "Error: No Transport type in main" << std::endl;
+									cout << "Error: No appropriate mode set" << endl;
 								}
+								}
+
 							}
 							else if (cArriveBefore == 'y')
 							{
@@ -252,7 +255,7 @@ int main()
 								{
 									std::cout << "Error: No Transport type in main" << std::endl;
 								}
-								
+
 							}
 							else
 							{
@@ -269,7 +272,7 @@ int main()
 								}
 								else if (transportType == "Walker")
 								{
-									cout << "Your total journey time is : " << time << ", and you can leave any time you want." << endl;
+									cout << "Your total journey time is: " << time << ", and you can leave any time you want." << endl;
 								}
 								else
 								{
@@ -281,14 +284,14 @@ int main()
 					}
 				}
 				if (ButtInBox)
-				{						
+				{
 					if (temp.getName() == "AddButton" && deleting != true)
 					{//if the user has pressed the add node button
 						cout << "\n\n\nAdd button pressed" << endl;
 						adding = true;
 						OpenAddWindow();
-						//call function to add node
-						addNewDest("Node_Topology", &Top);
+						//Optional call function to add node from console
+						//addNewDest("Node_Topology", &Top);
 						//refresh topology so new node is incuded 
 						Top.clear();
 						Top = ReadFile("Node_Topology");
@@ -300,15 +303,15 @@ int main()
 					}
 					else if (temp.getName() == "WalkButton")
 					{//walk button has been pressed
-						mode = 0; cout << "Mode is: " << mode << endl;
+						mode = 0; cout << "Mode is: Walking" << endl;
 					}
 					else if (temp.getName() == "BusButton")
 					{//bus button has been pressed
-						mode = 1; cout << "Mode is: " << mode << endl;
+						mode = 1; cout << "Mode is: Bus" << endl;
 					}
 					else if (temp.getName() == "TrainButton")
 					{//train button has been pressed 
-						mode = 2; cout << "Mode is: " << mode << endl;
+						mode = 2; cout << "Mode is: Train" << endl;
 					}
 				}
 				if (deleting)
@@ -328,17 +331,17 @@ int main()
 							deleting = false;
 							break;
 						}
-						
+
 					}
 				}
 			}//end of click event
 		}//end of check event loop
 
-		//clear window and draw backgrounds
+		 //clear window and draw backgrounds
 		window.clear();
 		window.draw(Background);
 		window.draw(TopBackground);
-		
+
 		It = Top.begin();
 		while (It != Top.end())
 		{
@@ -355,14 +358,14 @@ int main()
 		}
 		window.draw(TopologyBox);
 		//Dog sprite animation
-		if (i < 12000)
+		if (i < 100)
 			i++;
-		else if (i == 12000)
+		else if (i == 100)
 			i = 0;
 		window.draw(dog.Draw(i));
 		window.display();
 	}//end of window loop
-	
+
 	Top.clear();
 	return 0;
 }

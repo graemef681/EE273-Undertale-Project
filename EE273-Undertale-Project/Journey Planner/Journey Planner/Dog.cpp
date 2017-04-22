@@ -19,12 +19,11 @@ Dog::~Dog()
 {
 }
 
-
 // Annoying Dog sprite animation
 sf::Sprite Dog::Draw(int i)
 {
 	int n;
-	n = floor(i / 1000);
-	dogentity.setTextureRect(sf::IntRect((n * 18), 565, 18, 12));
+	n = floor(i / 10);
+	dogentity.setTextureRect(sf::IntRect((n * 18), 565, 18, 12)); //i = frame of animation up to 10
 	return dogentity;
 }

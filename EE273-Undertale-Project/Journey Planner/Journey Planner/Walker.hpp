@@ -10,4 +10,3 @@ public:
 	void setConstants(float, std::string);
 	void arriveBefore(float);
 };
-

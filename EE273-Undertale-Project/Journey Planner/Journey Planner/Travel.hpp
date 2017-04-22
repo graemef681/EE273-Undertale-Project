@@ -10,7 +10,7 @@ public:
 	Travel();
 	~Travel();
 	double pathfinding_algorithm(Destination* start_dest, Destination* end_dest, std::list<Destination>*);
-	double pathfinding_algorithm(Destination* start_dest, Destination* end_dest, std::list<Destination>*,std::string);
+	double pathfinding_algorithm(Destination* start_dest, Destination* end_dest, std::list<Destination>*, std::string);
 	//double pathfinding_algorithm(Destination* start_dest, Destination* end_dest, std::list<Destination>*, char);
 	//double pathfinding_algorithm(Destination* start_dest, Destination* end_dest, std::list<Destination>*, char, std::string);
 	/*void leaveAfter(float);
@@ -27,4 +27,3 @@ protected:
 	float mean_speed;
 	double departTimes[20];
 };
-

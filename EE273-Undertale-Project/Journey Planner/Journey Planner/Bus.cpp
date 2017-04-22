@@ -29,7 +29,7 @@ float Bus::calcJourneyTime(float distance)
 		hour = int(time);
 		min = (time - hour) * 60;
 	}
-	std::cout << "Time is: " << hour <<": "<< min << std::endl;
+	std::cout << "Time is: " << hour << ": " << min << std::endl;
 	if (min > 60)
 	{
 		min = min - 60;
@@ -198,7 +198,7 @@ void Bus::leaveNow(float journeyTime)
 						totHour = totHour + 1;
 					}
 					totalTime = totHour + totMin;
-					std::cout << "Wait time is:" << waitTime <<std::endl;
+					std::cout << "Wait time is:" << waitTime << std::endl;
 					std::cout << "The next available bus leaves at " << departTimes[i] << std::endl;
 					std::cout << "Your journey time is " << journeyTime << ". Including the wait for the bus, the total journey time is " << totalTime << std::endl;
 					break;
@@ -233,7 +233,7 @@ void Bus::leaveNow(float journeyTime)
 				}
 				std::cout << "totMin is : " << totMin << "totHour is :" << totHour << std::endl;
 				totalTime = totHour + totMin;
-				std::cout << "Wait time is:" << waitTime<<std::endl;
+				std::cout << "Wait time is:" << waitTime << std::endl;
 				std::cout << "The next available " << type << " leaves at " << departTimes[i] << std::endl;
 				std::cout << "Your journey time is " << journeyTime << ". Including the wait for the bus, the total journey time is " << totalTime << std::endl;
 				break;

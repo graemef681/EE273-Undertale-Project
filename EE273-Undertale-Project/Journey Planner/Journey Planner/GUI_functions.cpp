@@ -1,4 +1,5 @@
 #include"GUI_functions.hpp"
+#include "Top.hpp"
 using namespace std;
 
 bool inBox(list<Destination>* top, sf::Vector2i position, Destination* temp)
@@ -52,10 +53,13 @@ void OpenAddWindow()
 	float newX, newY;
 	float newSpeed;
 	string* neighbours;
+	neighbours = new string[0];
 	int noNeighbours;
 	std::string str;
+	int n;
 	sf::Font font;
-	font.loadFromFile("sansation.ttf");
+	font.loadFromFile("sansation.ttf"); //Just put it in working directory, should work easier than the pictures c: 
+
 	sf::Text text;
 	sf::RectangleShape Textbox;
 	sf::Text Caption;
@@ -101,41 +105,43 @@ void OpenAddWindow()
 			{
 				if (event.key.code == sf::Keyboard::Return)
 				{
-					//Check text is valid then continue to get next information until all information gathered
-					switch (iterator)
+					if (!str.empty())
 					{
-					case -1:
-						Caption.setString("Name :");
-						cout << str << endl; //Set value of last item
-						iterator++;
-						break;
-					case 0:
-					{
-						Caption.setString("X co-ordinate :");
-						newName = str;
-						iterator++;
-						break;
-					}
-					case 1:
-					{
-						try
+						//Check text is valid then continue to get next information until all information gathered
+						switch (iterator)
 						{
-							newX = stof(str);
+						case -1:
+							Caption.setString("Name :");
+							cout << str << endl; //Set value of last item
 							iterator++;
-							Caption.setString("Y co-ordinate : ");
-						}
-						catch (std::exception)
+							break;
+						case 0:
 						{
 							Caption.setString("X co-ordinate :");
-							str = "";
+							newName = str;
+							iterator++;
+							break;
 						}
-						break;
-					}
-					case 2:
+						case 1:
 						{
 							try
 							{
-								newY= stof(str);
+								newX = stof(str);
+								iterator++;
+								Caption.setString("Y co-ordinate : ");
+							}
+							catch (std::exception)
+							{
+								Caption.setString("X co-ordinate :");
+								str = "";
+							}
+							break;
+						}
+						case 2:
+						{
+							try
+							{
+								newY = stof(str);
 								iterator++;
 								Caption.setString("Average Speed : ");
 							}
@@ -146,40 +152,70 @@ void OpenAddWindow()
 							}
 							break;
 						}
-					case 3:
+						case 3:
+						{
+							try
+							{
+								newSpeed = stof(str);
+								iterator++;
+								Caption.setString("No. of Neighbours : ");
+							}
+							catch (std::exception)
+							{
+								Caption.setString("Average Speed : ");
+								str = "";
+							}
+							break;
+						}
+						case 4:
+						{
+							try
+							{
+								noNeighbours = stof(str);
+								neighbours = new string[noNeighbours];
+								n = 0;
+								Caption.setString("Neighbour #1 :");
+								iterator++;
+							}
+							catch (std::exception)
+							{
+								Caption.setString("No. of Neighbours : ");
+								str = "";
+							}
+							break;
+						}
+						default:
+						{
+							if (n < noNeighbours-1)
+							{
+								neighbours[n] = str;
+								Caption.setString("Neighbour #"+ to_string(n+2) + " :");
+								iterator++;
+								n++;
+								break;
+							}
+							else if (n = noNeighbours-1)
+							{
+								neighbours[n] = str;
+								for (int i = 0; i < noNeighbours; i++)
+									cout << neighbours[i] << endl;
+								addNewDest("Node_topology", newName, newX, newY, newSpeed, neighbours, noNeighbours);
+								window.close();
+							}
+						}
+						}
+						str = "";
+						text.setString(str);
+					}
+				}
+				if (event.key.code == sf::Keyboard::BackSpace)
+				{
+					if (!str.empty())
 					{
-						try
-						{
-							newSpeed = stof(str);
-							iterator++;
-							Caption.setString("No. of Neighbours : ");
-						}
-						catch (std::exception)
-						{
-							Caption.setString("Average Speed : ");
-							str = "";
-						}
-						break;
+						str.pop_back();
+						text.setString(str);
 					}
-					case 4:
-					{
-						try
-						{
-							noNeighbours = stof(str);
-							iterator++;
-							Caption.setString("Neighbour #1 : ");
-							iterator = -1;
-						}
-						catch (std::exception)
-						{
-							Caption.setString("No. of Neighbours : ");
-							str = "";
-						}
-						break;
-					}
-					}
-					str = "";
-					text.setString(str);
+					
 				}
 			}
 			}
@@ -193,4 +229,3 @@ void OpenAddWindow()
 		}
 	}
 //end of function in box
-

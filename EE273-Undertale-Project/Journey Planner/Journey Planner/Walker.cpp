@@ -54,9 +54,9 @@ void Walker::arriveBefore(float journeyTime)
 {
 	float hour, min;
 	//get the time the user wants to arrive before
-	std::cout << "Please give the hour you want to arrive before:" << std::endl;
+	std::cout << "Please give the hour you want to arrive before: ";
 	std::cin >> hour;
-	std::cout << "Please give the minutes you want to arrive before:" << std::endl;
+	std::cout << "Please give the minutes you want to arrive before: ";
 	std::cin >> min;
 	float beforeTime = hour + (min / 100);
 
@@ -114,16 +114,15 @@ void Walker::arriveBefore(float journeyTime)
 				std::cout.setf(std::ios::fixed);
 				std::cout << "The arrive before time is " << beforeTime;
 				std::cout << " -- The current time is " << curTime;
-					if ((beforeTime - journeyTime) < curTime)
-					{
-						std::cout << "It is possible to walk to your destination before the desired time. The journey will take you " << journeyTime << std::endl;
-					}
-					else
-					{
-						std::cout << "You cannot walk to your destination before your desired time." << std::endl;
-					}
+				if ((beforeTime - journeyTime) < curTime)
+				{
+					std::cout << "It is possible to walk to your destination before the desired time. The journey will take you " << journeyTime << std::endl;
+				}
+				else
+				{
+					std::cout << "You cannot walk to your destination before your desired time." << std::endl;
+				}
 			}
 		}
 	}
 }
-

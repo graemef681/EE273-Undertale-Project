@@ -3,7 +3,7 @@
 Train::Train()
 {
 	std::string type = "Train";
-	float mean_speed = 50;
+	float mean_speed = 50; //Metres per second
 	double departTimes[18] = { 6.15, 7.15, 8.15, 9.15, 10.15, 11.15, 12.15, 13.15, 14.15, 15.15, 16.15, 17.15, 18.15, 19.15, 20.15, 21.15, 22.15, 23.15 };
 }
 
@@ -97,8 +97,8 @@ void Train::leaveAfter(float journeyTime)
 						totMin = totMin - 60;
 						totHour = totHour + 1;
 					}
-					totalTime = totHour + totMin ;
-					std::cout << "The next available " << type << " leaves at " << departTimes[i] << std::endl;
+					totalTime = totHour + totMin;
+					std::cout << "The next available train leaves at " << departTimes[i] << std::endl;
 					std::cout << "Your journey time is " << journeyTime << ". Including the wait for the train, the total journey time is " << totalTime << std::endl;
 					break;
 				}
@@ -129,7 +129,7 @@ void Train::leaveAfter(float journeyTime)
 					totHour = totHour + 1;
 				}
 				totalTime = totHour + totMin;
-				std::cout << "The next available " << type << " leaves at " << departTimes[i] << std::endl;
+				std::cout << "The next available train leaves at " << departTimes[i] << std::endl;
 				std::cout << "Your journey time is " << journeyTime << ". Including the wait for the train, the total journey time is " << totalTime << std::endl;
 				break;
 			}
@@ -194,7 +194,7 @@ void Train::leaveNow(float journeyTime)
 						totMin = totMin - 60;
 						totHour = totHour + 1;
 					}
-					totalTime = totHour + totMin ;
+					totalTime = totHour + totMin;
 					std::cout << "The next available " << type << " leaves at " << departTimes[i] << std::endl;
 					std::cout << "Your journey time is " << journeyTime << ". Including the wait for the train, the total journey time is " << totalTime << std::endl;
 					break;
@@ -225,7 +225,7 @@ void Train::leaveNow(float journeyTime)
 					totMin = totMin - 60;
 					totHour = totHour + 1;
 				}
-				totalTime = totHour + totMin ;
+				totalTime = totHour + totMin;
 				std::cout << "The next available " << type << " leaves at " << departTimes[i] << std::endl;
 				std::cout << "Your journey time is " << journeyTime << ". Including the wait for the train, the total journey time is " << totalTime << std::endl;
 				break;

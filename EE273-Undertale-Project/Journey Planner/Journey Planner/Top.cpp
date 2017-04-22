@@ -84,6 +84,22 @@ start:
 }
 
 
+void addNewDest(string fileName, string newName, float newX, float newY, float newSpeed, string* neighbours, int noNeighbours)
+{
+	//open the output file in append mode
+	ofstream outFile(fileName + ".txt", ios::app);
+	outFile << "\n" << newName << ";" << newX << "," << newY << ";" << newSpeed << ";";
+	outFile << noNeighbours << ";";
+	for (int j = 0; j < noNeighbours; j++)
+	{
+		//If valid destination then
+		outFile << neighbours[j];
+		if (j != noNeighbours - 1)
+			outFile << ","; //Will also need to check that neighbour is valid destiantion
+	}
+	outFile.close();
+}
+
 void addNewDest(string fileName, list<Destination>* currentTop)
 {
 	//open the output file in append mode
@@ -203,7 +219,7 @@ void deleteDest(list<Destination>* top, string nodeToDelete, string fileName)
 	{
 		if (It->getName() == nodeToDelete)
 		{
-			cout << "TO ERASE" << endl;
+			cout << "TO ERASE WATERFALL" << endl;
 			(*top).erase(It);
 			break;
 		}
