@@ -12,4 +12,3 @@ public:
 	void arriveBefore(float);
 	void leaveNow(float);
 };
-

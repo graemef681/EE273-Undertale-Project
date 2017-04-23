@@ -15,9 +15,6 @@ Train::~Train()
 float Train::calcJourneyTime(float distance)
 {
 	setConstants(50, "Train");
-	std::cout << "CalcJourneyTime called: distance = " << distance << std::endl;
-	std::cout << "Type is :" << type << std::endl;
-	std::cout << "Mean speed is :" << mean_speed << std::endl;
 
 	float time, hour = 0, min = 0, journeyTime;
 	time = distance / mean_speed;
@@ -65,7 +62,6 @@ void Train::leaveAfter(float journeyTime)
 	float curTime = curHour + (curMin / 100);
 	std::cout.precision(2);
 	std::cout.setf(std::ios::fixed);
-	std::cout << "The current time is " << curHour << ":" << curMin << std::endl;
 	// compare the hours
 	if (hour < curHour)
 	{//if the leave after time is before the current time
@@ -79,13 +75,10 @@ void Train::leaveAfter(float journeyTime)
 		}
 		else if (min >= curMin)
 		{// if the minutes is in the future, choose the next avaiable time
-			std::cout << "The leave time is this hour" << std::endl;
 			for (int i = 0; i < 20; i++)
 			{
 				std::cout.precision(2);
 				std::cout.setf(std::ios::fixed);
-				std::cout << "The leave time is " << leaveTime;
-				std::cout << " -- The depart time is " << departTimes[i] << std::endl;
 				if (departTimes[i] > leaveTime)
 				{//if the departTime is in the future 
 				 //set it as next available journey
@@ -108,14 +101,10 @@ void Train::leaveAfter(float journeyTime)
 	else if (hour > curHour)
 	{//if the leave after time is in a future hour
 	 //the next available time is the first one that hour
-		std::cout << "The leave time is a future hour" << std::endl;
-
 		for (int i = 0; i < 20; i++)
 		{
 			std::cout.precision(2);
 			std::cout.setf(std::ios::fixed);
-			std::cout << "The leave time is " << leaveTime;
-			std::cout << " -- The depart time is " << departTimes[i] << std::endl;
 			if (departTimes[i] > leaveTime)
 			{//if the departTime is in the future 
 			 // if the time until then + journey time is < the time it arrives - current time
@@ -150,7 +139,6 @@ void Train::leaveNow(float journeyTime)
 	float curTime = curHour + (curMin / 100);
 	std::cout.precision(2);
 	std::cout.setf(std::ios::fixed);
-	std::cout << "The current time is " << curHour << ":" << curMin << std::endl;
 
 	float hour, min;
 	//get the current time + 10 minutes
@@ -176,13 +164,10 @@ void Train::leaveNow(float journeyTime)
 		}
 		else if (min >= curMin)
 		{// if the minutes is in the future, choose the next avaiable time
-			std::cout << "The leave time is this hour" << std::endl;
 			for (int i = 0; i < 20; i++)
 			{
 				std::cout.precision(2);
 				std::cout.setf(std::ios::fixed);
-				std::cout << "The leave time is " << leaveTime;
-				std::cout << " -- The depart time is " << departTimes[i] << std::endl;
 				if (departTimes[i] > leaveTime)
 				{//if the departTime is in the future 
 				 //set it as next available journey
@@ -205,14 +190,11 @@ void Train::leaveNow(float journeyTime)
 	else if (hour > curHour)
 	{//if the leave after time is in a future hour
 	 //the next available time is the first one that hour
-		std::cout << "The leave time is a future hour" << std::endl;
 
 		for (int i = 0; i < 20; i++)
 		{
 			std::cout.precision(2);
 			std::cout.setf(std::ios::fixed);
-			std::cout << "The leave time is " << leaveTime;
-			std::cout << " -- The depart time is " << departTimes[i] << std::endl;
 			if (departTimes[i] > leaveTime)
 			{//if the departTime is in the future 
 			 // if the time until then + journey time is < the time it arrives - current time
@@ -254,7 +236,6 @@ void Train::arriveBefore(float journeyTime)
 	float curTime = curHour + (curMin / 100);
 	std::cout.precision(2);
 	std::cout.setf(std::ios::fixed);
-	std::cout << "The current time is " << curTime << std::endl;
 	// compare the hours
 	if (hour < curHour)
 	{//if the arrive before time is before the current time
@@ -269,15 +250,10 @@ void Train::arriveBefore(float journeyTime)
 		else if (min > curMin)
 		{// if the minutes is in the future, choose the next avaiable time
 		 //greater than the current time
-			std::cout << "The arrive before time is this hour" << std::endl;
-
 			for (int i = 0; i < 20; i++)
 			{
 				std::cout.precision(2);
 				std::cout.setf(std::ios::fixed);
-				std::cout << "The arrive before time is " << beforeTime;
-				std::cout << " -- The current time is " << curTime;
-				std::cout << " -- The depart time is " << departTimes[i] << std::endl;
 				if (departTimes[i] < beforeTime && departTimes[i]>curTime)
 				{//if the departTime is in the future 
 				 // if the time until then + journey time is < the time it arrives - current time
@@ -299,24 +275,20 @@ void Train::arriveBefore(float journeyTime)
 					}
 					else
 					{
-						std::cout << "There are no transports leaving before your desired times." << std::endl;
+						std::cout << "You cannot get the train to your destination before your desired time"<<std::endl;
 					}
 				}
 			}
 
 		}
+	}
 		else if (hour > curHour)
 		{//if the arrive before time is in a future hour
 		 //the next available time is the first one that hour
-			std::cout << "The arrive before time is a future hour" << std::endl;
-
-			for (int i = 0; i < 20; i++)
+			for (int i = 0; i < 18; i++)
 			{
 				std::cout.precision(2);
 				std::cout.setf(std::ios::fixed);
-				std::cout << "The arrive before time is " << beforeTime;
-				std::cout << " -- The current time is " << curTime;
-				std::cout << " -- The depart time is " << departTimes[i] << std::endl;
 				if (departTimes[i] < beforeTime && departTimes[i]>curTime)
 				{//if the departTime is in the future 
 				 // if the time until then + journey time is < the time it arrives - current time
@@ -338,10 +310,9 @@ void Train::arriveBefore(float journeyTime)
 					}
 					else
 					{
-						std::cout << "There are no transports leaving before your desired times." << std::endl;
+						std::cout << "You cannot get the train to your destination before your desired time" << std::endl;
 					}
 				}
 			}
 		}
 	}
-}

@@ -9,7 +9,7 @@ start:
 	list<Destination> Topology;
 	list<string*> Nlists;
 	ifstream inFile;
-	inFile.open(filename+".txt");
+	inFile.open(filename + ".txt");
 	if (inFile.is_open())
 	{
 		if (checkNetworkTop(filename))
@@ -19,22 +19,17 @@ start:
 				string temp;
 				string name;
 				getline(inFile, name, ';');
-				cout << "Name is:" << name << endl;
 				float x;
 				getline(inFile, temp, ',');
-				cout << "X is:" << temp << endl;
 				x = stof(temp);
 				float y;
 				getline(inFile, temp, ';');
 				y = stof(temp);
-				cout << "Y is:" << temp << endl;
 				float speed_avg;
 				getline(inFile, temp, ';');
 				speed_avg = stof(temp);
-				cout << "Speed average is: " << temp << endl;
 				int no_neighbours;
 				getline(inFile, temp, ';');
-				cout << "No neighbours: " << temp << endl;
 				no_neighbours = stoi(temp);
 				ptrneighbour = new string[no_neighbours];
 				for (int i = 0; i < no_neighbours; i++)
@@ -43,16 +38,14 @@ start:
 					{
 						getline(inFile, temp, ',');
 						ptrneighbour[i] = temp;
-						cout << "Neighbour " << i + 1 << " is " << temp << endl;
 					}
 					else if (i == no_neighbours - 1)
 					{
 						getline(inFile, temp);
 						ptrneighbour[i] = temp;
-						cout << "Last Neighbour " << i + 1 << " is " << temp << endl;
 					}
 
-				} 
+				}
 				Nlists.push_back(ptrneighbour);
 				Destination D({ 50, 50 }, { x, y }, name, speed_avg, no_neighbours);
 				Topology.push_back(D);
@@ -66,7 +59,6 @@ start:
 			{
 				//set neighbour list for all destinations
 				(*TIt).setNeighbourList(&Topology, *Nit);
-				cout << "Neighbours list has been set for: " << TIt->getName() << endl;
 				TIt++; Nit++;
 			}
 			delete[] ptrneighbour;
@@ -174,13 +166,11 @@ void deleteDest(list<Destination>* top, string nodeToDelete, string fileName)
 		{
 			//Is a neighbour being deleted? if so decrement
 			cout << It2->getName();
-			//cout << "It1 = " << It->getName();
 			if (It2->getName() == nodeToDelete)
 			{
 				//if the current item in the neighbour list is the destination is being removed
 				//decrement noNeighbours for that destination
 				It->setNoNeighbours((It->getNoNeighbours() - 1));
-				//cout << "NoNeighbours Decremented = " << It->getNoNeighbours();
 			}
 			It2++;
 		}
@@ -205,13 +195,13 @@ void deleteDest(list<Destination>* top, string nodeToDelete, string fileName)
 					outFile << It2->getName();
 				}
 			}
-			
+
 			It2++;
 		}
 		It++;
 		if (It != Tend && It->getName() != nodeToDelete)
 			outFile << endl;
-		
+
 	}
 	//Search through destinations and delete from topology.
 	It = Tbegin;
@@ -219,7 +209,6 @@ void deleteDest(list<Destination>* top, string nodeToDelete, string fileName)
 	{
 		if (It->getName() == nodeToDelete)
 		{
-			cout << "TO ERASE WATERFALL" << endl;
 			(*top).erase(It);
 			break;
 		}
@@ -240,7 +229,7 @@ bool checkNetworkTop(string filename)
 	getline(inFile, checkSpeed, ';');
 	getline(inFile, checkNoNeighbours, ';');
 	getline(inFile, checkNeighbour);
-	if(checkName.empty() || checkX.empty() || checkY.empty() || checkSpeed.empty()||checkNoNeighbours.empty()||checkNeighbour.empty())
+	if (checkName.empty() || checkX.empty() || checkY.empty() || checkSpeed.empty() || checkNoNeighbours.empty() || checkNeighbour.empty())
 	{
 		std::cout << "1  The topology given is invalid. Please provide another topology." << endl;
 		return false;
@@ -254,10 +243,10 @@ bool checkNetworkTop(string filename)
 			stof(checkSpeed);
 			stoi(checkNoNeighbours);
 		}
-		catch(invalid_argument)
+		catch (invalid_argument)
 		{
-		std::cout << " 2 The topology given is invalid. Please provide another topology." << endl;
-		return false;
+			std::cout << " 2 The topology given is invalid. Please provide another topology." << endl;
+			return false;
 		}
 	}
 	inFile.close();

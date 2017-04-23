@@ -4,7 +4,6 @@ using namespace std;
 
 bool inBox(list<Destination>* top, sf::Vector2i position, Destination* temp)
 {
-	cout << "called" << endl;
 	list<Destination>::iterator begin = (*top).begin(), end = (*top).end(), It;
 	It = begin;
 	//check if the mouse click is on any of the squares 
@@ -25,7 +24,6 @@ bool inBox(list<Destination>* top, sf::Vector2i position, Destination* temp)
 		//if the mouse is in a box
 		if (curX >= xmin && curX <= xmax && curY >= ymin && curY <= ymax)
 		{
-			cout << "In if" << endl;
 			//set in box to true
 			inBox = true;
 			*temp = *It;
@@ -186,15 +184,15 @@ void OpenAddWindow()
 						}
 						default:
 						{
-							if (n < noNeighbours-1)
+							if (n < noNeighbours - 1)
 							{
 								neighbours[n] = str;
-								Caption.setString("Neighbour #"+ to_string(n+2) + " :");
+								Caption.setString("Neighbour #" + to_string(n + 2) + " :");
 								iterator++;
 								n++;
 								break;
 							}
-							else if (n = noNeighbours-1)
+							else if (n = noNeighbours - 1)
 							{
 								neighbours[n] = str;
 								for (int i = 0; i < noNeighbours; i++)
@@ -215,7 +213,7 @@ void OpenAddWindow()
 						str.pop_back();
 						text.setString(str);
 					}
-					
+
 				}
 			}
 			}
@@ -226,6 +224,6 @@ void OpenAddWindow()
 		window.draw(text);
 		window.draw(Caption);
 		window.display();
-		}
 	}
+}
 //end of function in box

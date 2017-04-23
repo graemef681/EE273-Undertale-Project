@@ -77,9 +77,12 @@ int main()
 	bool adding = false;
 	bool deleting = false;
 
+	//Instructions for user pt1
+	cout << "Welcome to the journey planner!\n To begin, please select a mode of transport using the buttons on the right \n(Walking: Yellow Button\n Bus: Blue Button\n Train: Pink Button)" << endl;
+	
+
 	int i = 0, mode = 0;
 	//Initialise walking mode and int animation iterator
-	cout << "Initialised mode to: Walking" << endl;
 	//Window event and draw loop
 	while (window.isOpen())
 	{
@@ -101,6 +104,7 @@ int main()
 			//get position of mouse when it is clicked
 			bool blInBox = false;
 			bool ButtInBox = false;
+			char correctSelect;
 			Destination temp; //instance to return destination clicked on
 			if (event.type == sf::Event::MouseButtonReleased)
 			{
@@ -119,7 +123,7 @@ int main()
 					{
 						//set it as the start
 						startDest = temp;
-						cout << "START DESTINATION SET:" << startDest.getName() << endl;
+						cout << "Now please select your end destination." << endl;//user instructions pt3
 						selected = true;
 					}
 					else
@@ -128,18 +132,27 @@ int main()
 						{
 							//otherwise, set it as the end
 							endDest = temp;
-							cout << "START DESTINATION SET:" << startDest.getName() << endl;
-							cout << "END DESTINATION SET:" << endDest.getName() << endl;
+							selected = false; //reset selected so the user can select another start/end
+							cout << "START DESTINATION:" << startDest.getName() << endl;
+							cout << "END DESTINATION:" << endDest.getName() << endl;
+							cout << "Are these the start and end destinations that you want? (y/n):";
+							cin >> correctSelect;
+
+							if (correctSelect == 'n')
+							{
+								cout << "\nPlease select a start destination." << endl;
+								break;
+							}
 
 							string transportType, avoidName;
 							switch (mode)
 							{
-							case 0: transportType = "Walker";
-							case 1: transportType = "Bus";
-							case 2: transportType = "Train";
+							case 0: transportType = "Walker"; break;
+							case 1: transportType = "Bus"; break;
+							case 2: transportType = "Train"; break;
 							}
 
-							char cLeaveAfter = 'n', cArriveBefore = 'n', cAvoid = 'n', cStops = 'n';
+							char cLeaveAfter = 'n', cArriveBefore = 'n', cAvoid = 'n';
 							cout << "Do you want to select a time to leave after? (y/n): ";
 							cin >> cLeaveAfter;
 
@@ -155,38 +168,35 @@ int main()
 
 							if (cAvoid == 'y')
 							{
-
-								cout << "Please enter the name of the destination to avoid: ";
-								cin >> avoidName;
-								if (avoidName == startDest.getName() || avoidName == endDest.getName())
+								bool sameName = false;
+								do
 								{
-									cout << "You cannot avoid the start/end destination. Please enter another destination." << endl;
+									cout << "Please enter the name of the destination to avoid: ";
 									cin >> avoidName;
+									if (avoidName == startDest.getName() || avoidName == endDest.getName())
+									{
+										sameName = true;
+										cout << "You cannot avoid the start/end destination." << endl;
+									}
+									else
+									{
+										sameName = false;
+									}
 								}
+								while (sameName);
 							}
-
-							//cout << "Do you want to minimise the number of stops? (y/n): ";
-							//cin >> cStops;
 
 							//Call appropriate pathfinding function
 							Travel pathfinder;
 							double distance, time;
-							if (cStops == 'y'&& cAvoid == 'n')
-							{
-								//distance = pathfinder.pathfinding_algorithm(&startDest, &endDest, &Top,cStops);
-							}
-							else if (cAvoid == 'y'&& cStops == 'n')
+						
+						    if (cAvoid == 'y')
 							{
 								distance = pathfinder.pathfinding_algorithm(&startDest, &endDest, &Top, avoidName);
-							}
-							else if (cStops == 'y' && cAvoid == 'y')
-							{
-								//	distance = pathfinder.pathfinding_algorithm(&startDest, &endDest, &Top, cStops, avoidName);
 							}
 							else
 							{
 								// call the basic pathfinding function
-								cout << "BASIC PATHFINDING CALLED";
 								distance = pathfinder.pathfinding_algorithm(&startDest, &endDest, &Top);
 							}
 							//Calculate the journey time from the correct mode 
@@ -196,16 +206,19 @@ int main()
 							{
 								Walker test;
 								time = test.calcJourneyTime(distance);
+								break;
 							}
 							case 1:
 							{
 								Bus test;
 								time = test.calcJourneyTime(distance);
+								break;
 							}
 							case 2:
 							{
 								Train test;
 								time = test.calcJourneyTime(distance);
+								break;
 							}
 							}
 							//Check arriveBefore and leaveAfter
@@ -216,18 +229,21 @@ int main()
 								case 0:
 								{
 									cout << "Your total journey time is: " << time << ", and you can leave any time you want." << endl;
+									break;
 								}
 								case 1:
 								{
 									Bus test;
 									test.leaveAfter(time);
+									break;
 								}
 								case 2:
 								{
 									Train test;
 									test.leaveAfter(time);
+									break;
 								}
-								default: 
+								default:
 								{
 									cout << "Error: No appropriate mode set" << endl;
 								}
@@ -281,21 +297,25 @@ int main()
 							}
 
 						}
+						else if (startDest.getName() == temp.getName())
+						{
+							cout << "The end destination cannot be the same as the start destination, please select another destination." << endl;
+						}
+						//user instructions pt4
+						cout << "If you would like to plan another journey, please start again by selecting your mode of transport using the buttons on the right\n (Walking: Yellow Button\n Bus: Blue Button\n Train: Pink Button)" << endl;
+						cout << "Alternatively, if you would like to use the same mode of transport, please select your start destination." << endl;
 					}
 				}
 				if (ButtInBox)
 				{
 					if (temp.getName() == "AddButton" && deleting != true)
 					{//if the user has pressed the add node button
-						cout << "\n\n\nAdd button pressed" << endl;
 						adding = true;
 						OpenAddWindow();
 						//Optional call function to add node from console
-						//addNewDest("Node_Topology", &Top);
 						//refresh topology so new node is incuded 
 						Top.clear();
 						Top = ReadFile("Node_Topology");
-						cout << "File read." << endl;
 					}
 					else if (temp.getName() == "DelButton" && adding != true)
 					{//delete button has been pressed
@@ -303,20 +323,22 @@ int main()
 					}
 					else if (temp.getName() == "WalkButton")
 					{//walk button has been pressed
-						mode = 0; cout << "Mode is: Walking" << endl;
+						mode = 0;
+						cout << "Next, please select your starting destination." << endl; //user instructions pt2 
 					}
 					else if (temp.getName() == "BusButton")
 					{//bus button has been pressed
 						mode = 1; cout << "Mode is: Bus" << endl;
+						cout << "Next, please select your starting destination." << endl;//user instructions pt2 
 					}
 					else if (temp.getName() == "TrainButton")
 					{//train button has been pressed 
 						mode = 2; cout << "Mode is: Train" << endl;
+						cout << "Next, please select your starting destination." << endl; //user instructions pt2
 					}
 				}
 				if (deleting)
 				{//if the user clicked deleted
-					cout << "Temp Name: " << temp.getName() << endl;
 					cout << "Click the destination you want to delete!\n";
 					//delete the node the user clicks on
 					list<Destination>::iterator TBegin = Top.begin(), Tend = Top.end();
@@ -324,7 +346,6 @@ int main()
 					while (It != TBegin)
 					{
 						It--;
-						cout << "It->getName(): " << It->getName() << endl;
 						if (It->getName() == temp.getName())
 						{//find the node the user wants to delete and remove it
 							deleteDest(&Top, temp.getName(), "Node_topology");

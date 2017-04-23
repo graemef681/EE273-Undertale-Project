@@ -22,9 +22,6 @@ Destination::Destination(sf::Vector2f size, sf::Vector2f position, std::string n
 	this->setPosition(position);
 	speed_limit = speed_avg;
 	noNeighbours = no_Neighbours;
-	std::cout << this->name << std::endl;
-	std::cout << this->getPosition().x << "," << this->getPosition().y << std::endl;
-	std::cout << this->speed_limit << std::endl;
 }
 
 Destination::~Destination()

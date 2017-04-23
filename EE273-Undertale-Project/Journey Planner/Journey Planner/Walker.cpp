@@ -23,10 +23,6 @@ Walker::~Walker()
 float Walker::calcJourneyTime(float distance)
 {
 	setConstants(3.1, "Walk");
-	std::cout << "CalcJourneyTime called: distance = " << distance << std::endl;
-	std::cout << "Type is :" << type << std::endl;
-	std::cout << "Mean speed is :" << mean_speed << std::endl;
-
 	float time, hour = 0, min = 0, journeyTime;
 	time = distance / mean_speed;
 
@@ -69,7 +65,6 @@ void Walker::arriveBefore(float journeyTime)
 	float curTime = curHour + (curMin / 100);
 	std::cout.precision(2);
 	std::cout.setf(std::ios::fixed);
-	std::cout << "The current time is " << curTime << std::endl;
 	// compare the hours
 	if (hour < curHour)
 	{//if the arrive before time is before the current time
@@ -84,14 +79,11 @@ void Walker::arriveBefore(float journeyTime)
 		else if (min > curMin)
 		{// if the minutes is in the future, choose the next avaiable time
 		 //greater than the current time
-			std::cout << "The arrive before time is this hour" << std::endl;
 
 			for (int i = 0; i < 20; i++)
 			{
 				std::cout.precision(2);
 				std::cout.setf(std::ios::fixed);
-				std::cout << "The arrive before time is " << beforeTime;
-				std::cout << " -- The current time is " << curTime;
 				if ((beforeTime - journeyTime) < curTime)
 				{
 					std::cout << "It is possible to walk to your destination before the desired time. The journey will take you " << journeyTime << std::endl;
@@ -103,26 +95,24 @@ void Walker::arriveBefore(float journeyTime)
 			}
 
 		}
-		else if (hour > curHour)
-		{//if the arrive before time is in a future hour
+	}
+	else if (hour > curHour)
+	{//if the arrive before time is in a future hour
 		 //the next available time is the first one that hour
-			std::cout << "The arrive before time is a future hour" << std::endl;
-
 			for (int i = 0; i < 20; i++)
 			{
 				std::cout.precision(2);
 				std::cout.setf(std::ios::fixed);
-				std::cout << "The arrive before time is " << beforeTime;
-				std::cout << " -- The current time is " << curTime;
 				if ((beforeTime - journeyTime) < curTime)
 				{
 					std::cout << "It is possible to walk to your destination before the desired time. The journey will take you " << journeyTime << std::endl;
+					break;
 				}
 				else
 				{
 					std::cout << "You cannot walk to your destination before your desired time." << std::endl;
 				}
 			}
-		}
+		
 	}
 }
